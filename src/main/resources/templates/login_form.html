@@ -26,9 +26,11 @@
     <div class="view-container">
       <div class="form-container shadow-lg p-3 mb-5 bg-body rounded">
         <form method="post" th:action="@{/signin}">
-          <h2>Please sign in</h2>
           <div>
-            <label for="username">Username</label>
+            <img th:src="@{/images/small_logo.jpg}"/>
+          </div>
+          <div>
+            <label for="username">Email</label>
             <input
               type="text"
               id="username"
@@ -40,7 +42,7 @@
             />
           </div>
           <div>
-            <label for="password">Password</label>
+            <label for="password">Hasło</label>
             <input
               type="password"
               id="password"
@@ -57,7 +59,7 @@
           />
           <div class="form_btn_container">
             <button class="btn btn-lg btn-primary btn-block" type="submit">
-              Sign in
+              Zaloguj
             </button>
           </div>
         </form>
