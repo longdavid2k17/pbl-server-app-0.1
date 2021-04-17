@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>PBL</title>
+    <link
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css"
+      rel="stylesheet"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login_style.css}" />
+  </head>
+  <body>
+    <div class="view-container">
+      <div class="form-container shadow-lg p-3 mb-5 bg-body rounded">
+        <form method="post" th:action="@{/signin}">
+          <h2>Please sign in</h2>
+          <div>
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name='username'
+              class="form-control"
+              placeholder="Username"
+              required
+              autofocus
+            />
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name='password'
+              class="form-control"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <input
+            name="_csrf"
+            type="hidden"
+            value="b106b144-0efb-4a69-9993-8b4c90f91bdc"
+          />
+          <div class="form_btn_container">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">
+              Sign in
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

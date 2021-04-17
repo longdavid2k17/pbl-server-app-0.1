@@ -1,0 +1,63 @@
+.view-container {
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.form-container {
+  border: solid 2px black;
+  background-color: white;
+}
+
+.form-container input {
+  border: 1px solid black;
+  -webkit-transition: background-color .5s ease-in-out;
+  transition: background-color .5s ease-in-out;
+}
+
+.form-container input::-webkit-input-placeholder {
+  color: black;
+  opacity: 0.75;
+}
+
+.form-container input:-ms-input-placeholder {
+  color: black;
+  opacity: 0.75;
+}
+
+.form-container input::-ms-input-placeholder {
+  color: black;
+  opacity: 0.75;
+}
+
+.form-container input::placeholder {
+  color: black;
+  opacity: 0.75;
+}
+
+.form-container input:focus {
+  background-color: #ece2e2;
+}
+
+.form_btn_container {
+  margin-top: 1.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.form_btn_container button {
+  width: 150px;
+}
+
+.form_btn_container button:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
