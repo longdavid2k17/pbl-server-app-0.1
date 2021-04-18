@@ -16,3 +16,12 @@ Backend
 - serwis do przekazywania tasków obliczeniowych w RabbitMQ
 - serwis mailowy do przekazywania informacji o zakończonych zadaniach
 - migracja bazy na MySQL (?)
+
+# To clear
+
+- sposób tworzenia użytkowników, rejestracja z poziomu formularza czy statycznie potworzyć kilku zdefiniowanych użytkowników
+- Zakładka Wyniki -> w jaki sposób wyniki mają być przechowywane w bazie danych (np ścieżki do wygenerowanych plików na serwerze, daty utworzenia i status , czy też może jakoś inaczej)
+- dokładniejsze informacje na temat "zestawu"/"kształtu" -> czy tylko to mają być dane typu nazwa i szereg parametrów typu długość szerokość etc czy też inne
+- jak ma wyglądać proces tworzenia nowego zadania, -> czy to ma być tylko wybranie kształtu, zadanie wartości i wysłanie
+- czy do serwisu kolejkowania mają być dostępne z poziomu panelu ewentualne zmiany parametrów konfiguracyjnych
+- rodzaj bazy danych (MSSQL, MySQL, czy cokolwiek...)
