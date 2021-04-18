@@ -39,8 +39,19 @@ public class HomePanelController
         {
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user",user);
-            model.addAttribute("role",user.getRole());
         }
         return "navbarUser";
+    }
+
+    @GetMapping("/logged/shape/new")
+    public String newShapeForm(HttpServletRequest request, Model model)
+    {
+        Principal principal = request.getUserPrincipal();
+        if(principal!=null)
+        {
+            User user = userRepository.findByUsername(principal.getName());
+            model.addAttribute("user",user);
+        }
+        return "shape/addShape";
     }
 }
