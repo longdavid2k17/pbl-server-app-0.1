@@ -35,15 +35,15 @@
     <ul class="navbar-nav w-100">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Kształt
+          Zestawy
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <div th:if="${user.role=='ROLE_ADMIN'}">
-            <a class="dropdown-item" href="#">Lista kształtów</a>
-            <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj kształt</a>
+            <a class="dropdown-item" href="#">Zestaw parametrów</a>
+            <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
           </div>
           <div th:if="${user.role!='ROLE_ADMIN'}">
-            <a class="dropdown-item" href="#">Lista kształtów</a>
+            <a class="dropdown-item" href="#">Istniejące zestawy</a>
           </div>
         </div>
       </li>
@@ -52,6 +52,11 @@
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">Wyniki</a>
+      </li>
+      <li class="nav-item">
+        <div th:if="${user.role=='ROLE_ADMIN'}">
+        <a class="nav-link" href="#">Zarządzaj użytkownikami</a>
+        </div>
       </li>
       <li class="nav-item ml-auto">
         <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
