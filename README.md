@@ -1,5 +1,5 @@
 # pbl-server-app-0.1
-Server application for generating and managing data for neural network
+Server application for generating and managing data for machine learning
 
 # Next-ToDo
 
