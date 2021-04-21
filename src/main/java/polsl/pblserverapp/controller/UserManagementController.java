@@ -14,8 +14,8 @@ import java.security.Principal;
 @Controller
 public class UserManagementController
 {
-    private UserRepository userRepository;
-    private Logger log = LoggerFactory.getLogger(UserManagementController.class);
+    private final UserRepository userRepository;
+    private final Logger log = LoggerFactory.getLogger(UserManagementController.class);
 
     public UserManagementController(UserRepository userRepository)
     {
@@ -27,15 +27,15 @@ public class UserManagementController
     {
         Principal principal = request.getUserPrincipal();
         User user = userRepository.findByUsername(principal.getName());
-        if(user.getRole()!="ROLE_ADMIN")
+        if(!user.getRole().equals("ROLE_ADMIN"))
         {
             return "redirect:/logged";
         }
         else
         {
+            model.addAttribute("user",user);
             model.addAttribute("userList",userRepository.findAll());
             return "usermanagment";
         }
-
     }
 }

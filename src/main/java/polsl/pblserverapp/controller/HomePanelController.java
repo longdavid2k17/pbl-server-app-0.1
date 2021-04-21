@@ -12,7 +12,7 @@ import java.security.Principal;
 @Controller
 public class HomePanelController
 {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public HomePanelController(UserRepository userRepository)
     {

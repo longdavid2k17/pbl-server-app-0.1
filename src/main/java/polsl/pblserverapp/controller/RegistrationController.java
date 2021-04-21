@@ -15,9 +15,9 @@ import javax.validation.Valid;
 @Controller
 public class RegistrationController
 {
-    private UserRepository userRepository;
-    private Logger log = LoggerFactory.getLogger(RegistrationController.class);
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final Logger log = LoggerFactory.getLogger(RegistrationController.class);
+    private final PasswordEncoder passwordEncoder;
 
     public RegistrationController(UserRepository userRepository,PasswordEncoder passwordEncoder)
     {
@@ -33,7 +33,7 @@ public class RegistrationController
     }
 
     @PostMapping("/register")
-    public String proceed(@Valid User user, Model model) throws Exception
+    public String proceed(@Valid User user, Model model)
     {
         if(user.getUsername()!=null && user.getPassword()!=null)
         {
