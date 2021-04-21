@@ -26,10 +26,12 @@ public class BuildedUserService
         admin.setUsername("dawid@student.polsl.pl");
         admin.setPassword(passwordEncoder.encode("zaq1@wsx2020"));
         admin.setRole("ROLE_ADMIN");
+        admin.setEnabled(true);
         User user = new User();
         user.setUsername("adam@student.polsl.pl");
         user.setPassword(passwordEncoder.encode("zaq1@wsx2020"));
         user.setRole("ROLE_USER");
+        user.setEnabled(true);
         userRepository.save(admin);
         userRepository.save(user);
     }

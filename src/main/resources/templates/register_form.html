@@ -21,22 +21,41 @@
             crossorigin="anonymous"
     />
     <link rel="stylesheet" type="text/css" th:href="@{/css/login_style.css}" />
+    <script>
+        function check_pass()
+        {
+            if (document.getElementById('password1').value ===
+                document.getElementById('password2').value)
+            {
+                document.getElementById('submit').disabled = false;
+            }
+            else
+            {
+                document.getElementById('submit').disabled = true;
+            }
+        }
+    </script>
 </head>
 <body>
 <div class="view-container">
     <div class="form-container shadow-lg p-3 mb-5 bg-body rounded">
-        <form method="post">
-            <div>
+        <form method="post" th:action="@{/register}" th:object="${user}">
+            <div class="d-flex justify-content-center">
                 <img th:src="@{/images/small_logo.jpg}"/>
+            </div>
+            <div th:if="${message}" style="color: red">
+                <h2 th:text="${message}"/>
             </div>
             <div>
                 <label for="username">Email</label>
                 <input
-                        type="text"
+                        type="email"
                         id="username"
                         name='username'
                         class="form-control"
-                        placeholder="Username"
+                        placeholder="Email"
+                        pattern=".+@polsl.pl"
+                        th:field="*{username}"
                         required
                         autofocus
                 />
@@ -47,9 +66,11 @@
                         type="password"
                         id="password1"
                         name='password1'
+                        th:field="*{password}"
                         class="form-control"
-                        placeholder="Password"
+                        placeholder="Hasło"
                         required
+                        onchange='check_pass();'
                 />
             </div>
             <div>
@@ -59,8 +80,9 @@
                         id="password2"
                         name='password2'
                         class="form-control"
-                        placeholder="Password"
+                        placeholder="Hasło"
                         required
+                        onchange='check_pass();'
                 />
             </div>
             <input
@@ -69,11 +91,14 @@
                     value="b106b144-0efb-4a69-9993-8b4c90f91bdc"
             />
             <div class="form_btn_container">
-                <button class="btn btn-lg btn-primary btn-block" type="submit">
-                    Zarejestruj sie
+                <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit">
+                    Zarejestruj się
                 </button>
             </div>
         </form>
+        <div>
+            <p>Twoje konto zostanie dodane po zatwierdzeniu przez administratora</p>
+        </div>
     </div>
 </div>
 </body>

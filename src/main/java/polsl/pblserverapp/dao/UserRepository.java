@@ -8,4 +8,5 @@ import polsl.pblserverapp.model.User;
 public interface UserRepository extends CrudRepository<User,Long>
 {
     User findByUsername(String s);
+    boolean existsUserByUsername(String s);
 }

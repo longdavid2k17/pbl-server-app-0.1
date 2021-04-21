@@ -1,0 +1,11 @@
+.instruction-container {
+    padding: 1rem;
+    margin-top: 2rem;
+    border: solid 1px black;
+}
+
+@media (min-width: 320px) {
+    .admin-section {
+        border-right: solid 1px black;
+    }
+}

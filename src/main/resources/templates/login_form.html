@@ -29,6 +29,9 @@
           <div>
             <img th:src="@{/images/small_logo.jpg}"/>
           </div>
+          <div th:if="${message}">
+            <h2 th:text="${message}"/>
+          </div>
           <div>
             <label for="username">Email</label>
             <input
@@ -58,12 +61,14 @@
             value="b106b144-0efb-4a69-9993-8b4c90f91bdc"
           />
           <div class="form_btn_container">
-            <a th:href="@{/register}"><button class="btn btn-lg btn-primary btn-block">Register</button></a>
             <button class="btn btn-lg btn-primary btn-block" type="submit">
               Zaloguj
             </button>
           </div>
         </form>
+        <div class="form_btn_container">
+          <a th:href="@{/register}"><button class="btn btn-lg btn-primary btn-block">Zarejestruj się</button></a>
+        </div>
       </div>
     </div>
   </body>

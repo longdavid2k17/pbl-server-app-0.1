@@ -24,6 +24,7 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous" defer></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
+    <link rel="stylesheet" th:href="@{/css/index.css}">
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -64,5 +65,28 @@
     </ul>
   </div>
 </nav>
+    <article class="d-flex justify-content-center">
+      <section class="instruction-container">
+        <h2 class="text-center">Tabela praw</h2>
+        <div class="d-flex flex-row flex-wrap">
+          <div class="admin-section pr-3">
+            <h2>Admin</h2>
+            <ul>
+              <li>Odpowiada za dostęp</li>
+              <li>Operacje na użytkownikach</li>
+              <li>Dodać nowe zestawy</li>
+              <li>Działania usera</li>
+            </ul>
+          </div>
+          <div class="user-section pl-3">
+            <h2>User</h2>
+            <ul>
+              <li>Dostęp do wyników</li>
+              <li>Dodać zadanie do obliczania</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </article>
   </body>
 </html>

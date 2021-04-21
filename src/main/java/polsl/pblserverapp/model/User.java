@@ -20,6 +20,7 @@ public class User
     private String username;
     private String password;
     private String role;
+    private boolean enabled;
 
     @Override
     public String toString() {
@@ -28,6 +29,7 @@ public class User
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", role='" + role + '\'' +
+                ", enabled=" + enabled +
                 '}';
     }
 }
