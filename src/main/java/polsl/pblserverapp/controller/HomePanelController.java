@@ -42,16 +42,4 @@ public class HomePanelController
         }
         return "navbarUser";
     }
-
-    @GetMapping("/logged/shape/new")
-    public String newShapeForm(HttpServletRequest request, Model model)
-    {
-        Principal principal = request.getUserPrincipal();
-        if(principal!=null)
-        {
-            User user = userRepository.findByUsername(principal.getName());
-            model.addAttribute("user",user);
-        }
-        return "shape/addShape";
-    }
 }

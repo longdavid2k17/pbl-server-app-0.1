@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-  <head>
+<head>
     <meta charset="utf-8" />
     <meta
       name="viewport"
@@ -24,8 +24,8 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous" defer></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
-  </head>
-  <body>
+</head>
+<body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" th:href="@{/logged}">PBL</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,15 +35,15 @@
           <ul class="navbar-nav w-100">
               <li class="nav-item dropdown">
                   <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Kształt
+                      Zestawy
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                       <div th:if="${user.role=='ROLE_ADMIN'}">
-                          <a class="dropdown-item" href="#">Lista kształtów</a>
-                          <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj kształt</a>
+                          <a class="dropdown-item" href="#">Zestaw parametrów</a>
+                          <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
                       </div>
                       <div th:if="${user.role!='ROLE_ADMIN'}">
-                          <a class="dropdown-item" href="#">Lista kształtów</a>
+                          <a class="dropdown-item" href="#">Istniejące zestawy</a>
                       </div>
                   </div>
               </li>
@@ -55,7 +55,7 @@
               </li>
               <li class="nav-item">
                   <div th:if="${user.role=='ROLE_ADMIN'}">
-                      <a class="nav-link" href="#">Zarządzaj użytkownikami</a>
+                      <a class="nav-link" th:href="@{/manager}">Zarządzaj użytkownikami</a>
                   </div>
               </li>
               <li class="nav-item ml-auto">
@@ -67,29 +67,25 @@
 <div class="container">
     <div class="row d-flex p-2 justify-content-center">
         <div class="col-4">
-            <form>
-                <h2>Wygeneruj nowy kształt/zestaw</h2>
+            <div th:if="${message}" style="color: red">
+                <h1 th:text="${message}"/>
+            </div>
+            <form method="POST" th:object="${shape}">
+                <h2>Wygeneruj nowy zestaw parametrów</h2>
                 <div class="form-group">
                     <label for="shapeName">Nazwa:</label>
-                    <input type="text" id="shapeName" name="shapeName" class="form-control" min="5" required>
+                    <input type="text" id="shapeName" name="shapeName" class="form-control" min="5" required th:field="*{name}">
                 </div>
-                <div class="form-group">
-                    <label for="paramsNumber">Liczba parametrów:</label>
-                    <input type="number" id="paramsNumber" name="paramsNumber" class="form-control" min="1" required>
-                </div>
-                <div class="form-group">
-                    <h3>Parametr X: (to potem bedzie w nastepnym formularzu)</h3>
-                    <label for="paramXName">Nazwa parametru X:</label>
-                    <input type="text" id="paramXName" class="form-control" name="paramXName" required>
-                    <label for="paramXShorts">Skrót parametru X:</label>
-                    <input type="text" id="paramXShorts" name="paramXShorts" class="form-control">
+                <div th:each="switchParameter : ${switchesList}">
+                    <input name="switchParameter" type="checkbox" th:field="*{parametersList}" th:value="${switchParameter.id}" />
+                    <span th:text="${switchParameter.parameter}">parameter</span><br/>
                 </div>
                 <div class="form-group d-flex justify-content-end">
-                    <button class="btn btn-success" type="submit">Dalej ></button>
+                    <button class="btn btn-success" type="submit">Zapisz ></button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-  </body>
+</body>
 </html>

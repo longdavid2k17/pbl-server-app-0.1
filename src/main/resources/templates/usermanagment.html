@@ -58,7 +58,7 @@
       </li>
       <li class="nav-item">
         <div th:if="${user.role=='ROLE_ADMIN'}">
-          <a class="nav-link" href="#">Zarządzaj użytkownikami</a>
+          <a class="nav-link" th:href="@{/manager}">Zarządzaj użytkownikami</a>
         </div>
       </li>
       <li class="nav-item ml-auto">
@@ -88,9 +88,17 @@
         <td>Aktywne</td>
       </div>
       <div th:if="${user.enabled==FALSE}">
-        <td><a class="nav-link" th:href="@{/}"><button class="btn btn-primary">Zatwierdź</button></a></td>
+        <td><a class="nav-link" th:href="@{/manager/activate/{userId}(userId=${user.userId})}"><button class="btn btn-primary">Zatwierdź</button></a></td>
       </div>
-      <td th:text="${user.role}">Status</td>
+      <div th:if="${user.role=='ROLE_ADMIN'}">
+        <td th:text="${user.role}">Status</td>
+      </div>
+      <div th:if="${user.role=='ROLE_USER'}">
+        <td>
+          <p th:text="${user.role}"></p>
+          <a class="nav-link" th:href="@{/manager/changerole/{userId}(userId=${user.userId})}"><button class="btn btn-primary">Awansuj na Administratora</button></a>
+        </td>
+      </div>
     </tr>
     </tbody>
   </table>

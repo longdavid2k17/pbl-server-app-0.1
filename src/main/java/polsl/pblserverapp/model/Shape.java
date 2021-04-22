@@ -1,19 +1,23 @@
 package polsl.pblserverapp.model;
 
+import lombok.Data;
 import javax.persistence.*;
-import java.util.LinkedHashMap;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+@Data
 @Entity
-public class Shape
+public class Shape implements Serializable
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long shapeId;
     private String name;
-    private int parametersCount;
-
-    @ElementCollection
-    private List<String> parametersList;
-    // TODO może wyrzucać wyjatek
+    private Date creationDate;
+    @ManyToMany
+    @Size(min = 1,message = "Musi zostać wybrany przynajmniej jeden parametr")
+    private List<SwitchParameter> parametersList = new ArrayList<>();
 }
