@@ -26,50 +26,50 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" th:href="@{/logged}">PBL</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav w-100">
-              <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      Zestawy
-                  </a>
-                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <div th:if="${user.role=='ROLE_ADMIN'}">
-                          <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
-                          <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
-                          <a class="dropdown-item" href="#">Nowe zadanie</a>
-                      </div>
-                      <div th:if="${user.role!='ROLE_ADMIN'}">
-                          <a class="dropdown-item" th:href="@{/logged/shapes}">Istniejące zestawy</a>
-                          <a class="dropdown-item" href="#">Nowe zadanie</a>
-                      </div>
-                  </div>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="#">Wyniki</a>
-              </li>
-              <li class="nav-item">
-                  <div th:if="${user.role=='ROLE_ADMIN'}">
-                      <a class="nav-link" th:href="@{/manager}">Zarządzaj użytkownikami</a>
-                  </div>
-              </li>
-              <li class="nav-item ml-auto">
-                  <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
-              </li>
-          </ul>
-      </div>
-  </nav>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" th:href="@{/logged}">PBL</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav w-100">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Zestawy
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <div th:if="${user.role=='ROLE_ADMIN'}">
+                        <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
+                        <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
+                        <a class="dropdown-item" href="#">Nowe zadanie</a>
+                    </div>
+                    <div th:if="${user.role!='ROLE_ADMIN'}">
+                        <a class="dropdown-item" th:href="@{/logged/shapes}">Istniejące zestawy</a>
+                        <a class="dropdown-item" href="#">Nowe zadanie</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logged/results}">Wyniki</a>
+            </li>
+            <li class="nav-item">
+                <div th:if="${user.role=='ROLE_ADMIN'}">
+                    <a class="nav-link" th:href="@{/manager}">Zarządzaj użytkownikami</a>
+                </div>
+            </li>
+            <li class="nav-item ml-auto">
+                <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
+            </li>
+        </ul>
+    </div>
+</nav>
 <div class="container">
     <div class="row d-flex p-2 justify-content-center">
         <div class="col-4">
             <div th:if="${message}" style="color: red">
                 <h1 th:text="${message}"/>
             </div>
-            <form method="POST" th:object="${shape}">
+            <form method="POST" th:object="${shape}" class="form-container p-3">
                 <h2>Wygeneruj nowy zestaw parametrów</h2>
                 <div class="form-group">
                     <label for="shapeName">Nazwa:</label>
@@ -85,6 +85,19 @@
                 </div>
                 <div class="form-group d-flex justify-content-end">
                     <button class="btn btn-success" type="submit">Zapisz ></button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row d-flex p-2 justify-content-center">
+        <div class="col-4">
+            <form method="POST" class="form-container p-3" th:action="@{/logged/shapes/newswitch}">
+                <div class="form-group d-flex flex-column">
+                    <label for="switchValue">Przelacznik:</label>
+                    <input type="text" id="switchValue" name="switchValue" th:value="${switchValue}"/>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-success" type="submit">Dodaj</button>
                 </div>
             </form>
         </div>

@@ -78,7 +78,7 @@
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Wyniki</a>
+            <a class="nav-link" th:href="@{/logged/results}">Wyniki</a>
           </li>
           <li class="nav-item">
             <div th:if="${user.role=='ROLE_ADMIN'}">
@@ -92,6 +92,9 @@
       </div>
     </nav>
     <div class="container">
+      <div th:if="${message}" style="color: red">
+        <h2 th:text="${message}"/>
+      </div>
       <div th:if="${shapeList.empty}">
         <span>Nie ma zdefiniowanego żadnego zestawu</span>
       </div>
@@ -116,10 +119,11 @@
           </div>
         </div>
       </div>
+      <a th:href="@{/logged/shapes/getAll}"><button class="btn btn-primary">Eksportuj do pliku CSV</button></a>
 
 
 
-      <button class="import-button" title="Importuj zestaw/y z pliku .CSV">+</button>
+      <button class="import-button" title="Importuj zestaw/y z pliku .CSV" data-target="#uploadModal" data-toggle="modal">+</button>
       <!-- Modal -->
       <div
         class="modal fade"
@@ -157,6 +161,42 @@
               <button type="button" class="btn btn-primary">
                 Wyślij do obliczeń
               </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+              class="modal fade"
+              id="uploadModal"
+              tabindex="-1"
+              aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="uploadModalLabel">Wybierz plik</h5>
+              <button
+                      type="button"
+                      class="close"
+                      data-dismiss="modal"
+                      aria-label="Close"
+              >
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="post" th:action="@{/logged/shapes/upload}" enctype="multipart/form-data">
+                <label for="csvfile">Plik</label>
+                <input type="file" id="csvfile" name="csvfile" accept=".csv" required/>
+                <hr/>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                  Zamknij
+                </button>
+                <button type="submit" class="btn btn-primary">
+                  Importuj
+                </button>
+              </form>
             </div>
           </div>
         </div>

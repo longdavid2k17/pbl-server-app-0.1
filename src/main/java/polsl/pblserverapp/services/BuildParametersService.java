@@ -23,10 +23,5 @@ public class BuildParametersService
         parameterRepository.save(new SwitchParameter("/b"));
         parameterRepository.save(new SwitchParameter("/c"));
         parameterRepository.save(new SwitchParameter("/d"));
-        parameterRepository.save(new SwitchParameter("/e"));
-        parameterRepository.save(new SwitchParameter("/f"));
-        parameterRepository.save(new SwitchParameter("/g"));
-        parameterRepository.save(new SwitchParameter("/h"));
-        parameterRepository.save(new SwitchParameter("/i"));
     }
 }
