@@ -17,6 +17,7 @@ public class Shape implements Serializable
     private Long shapeId;
     private String name;
     private Date creationDate;
+    private String command;
     @ManyToMany
     @Size(min = 1,message = "Musi zostać wybrany przynajmniej jeden parametr")
     private List<SwitchParameter> parametersList = new ArrayList<>();

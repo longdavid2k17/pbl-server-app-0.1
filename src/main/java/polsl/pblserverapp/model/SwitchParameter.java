@@ -14,11 +14,11 @@ public class SwitchParameter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String parameter;
+    private String switchParam;
 
     public SwitchParameter(String parameter)
     {
-        this.parameter = parameter;
+        this.switchParam = parameter;
     }
 
     public SwitchParameter()

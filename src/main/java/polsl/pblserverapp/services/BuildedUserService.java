@@ -32,7 +32,13 @@ public class BuildedUserService
         user.setPassword(passwordEncoder.encode("zaq1@wsx2020"));
         user.setRole("ROLE_USER");
         user.setEnabled(true);
+        User user2 = new User();
+        user2.setUsername("sebastian@student.polsl.pl");
+        user2.setPassword(passwordEncoder.encode("zaq1@wsx2020"));
+        user2.setRole("ROLE_USER");
+        user2.setEnabled(false);
         userRepository.save(admin);
         userRepository.save(user);
+        userRepository.save(user2);
     }
 }

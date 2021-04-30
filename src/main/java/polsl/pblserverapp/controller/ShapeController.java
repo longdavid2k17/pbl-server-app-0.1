@@ -15,25 +15,17 @@ import polsl.pblserverapp.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.security.Principal;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 @Controller
 public class ShapeController
 {
-//    try (ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("human.bin"))) {
-//    output.writeObject(human);
-
-    private UserRepository userRepository;
-    private Logger log = LoggerFactory.getLogger(ShapeController.class);
-    private SwitchParameterRepository switchParameterRepository;
-    private ShapeRepository shapeRepository;
+    private final UserRepository userRepository;
+    private final Logger log = LoggerFactory.getLogger(ShapeController.class);
+    private final SwitchParameterRepository switchParameterRepository;
+    private final ShapeRepository shapeRepository;
 
     public ShapeController(UserRepository userRepository, SwitchParameterRepository switchParameterRepository, ShapeRepository shapeRepository)
     {
@@ -82,6 +74,24 @@ public class ShapeController
             log.info("New shape: "+shape);
             shapeRepository.save(shape);
             return "redirect:/logged";
+        }
+    }
+
+    @GetMapping("/logged/shapes")
+    public String completeShapes(Model model,HttpServletRequest request)
+    {
+        Principal principal = request.getUserPrincipal();
+        User user = userRepository.findByUsername(principal.getName());
+        if(user.getRole().equals(null))
+        {
+            return "redirect:/logged";
+        }
+        else
+        {
+            List<Shape> shapeList = shapeRepository.findAll();
+            model.addAttribute("user",user);
+            model.addAttribute("shapeList",shapeList);
+            return "/shape/chooseSet";
         }
     }
 }
