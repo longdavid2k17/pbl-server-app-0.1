@@ -68,21 +68,16 @@
         <thead class="thead-dark">
         <tr>
             <th scope="col">ID</th>
-            <th scope="col">Data rozpoczecia</th>
+            <th scope="col">Data rozpoczęcia</th>
             <th scope="col">Status</th>
-            <th scope="col">Sciezka do pliku</th>
+            <th scope="col">Ścieżka do pliku</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${}">
+        <tr>
             <td colspan="4"> Brak wyników </td>
         </tr>
-        <tr th:each="">
-            <td th:text="${}">Id</td>
-            <td th:text="${}">Data rozpoczecia</td>
-            <td th:text="${}">Status</td>
-            <td th:text="${}">Sciezka do pliku</td>
-        </tr>
+
         </tbody>
     </table>
 </div>

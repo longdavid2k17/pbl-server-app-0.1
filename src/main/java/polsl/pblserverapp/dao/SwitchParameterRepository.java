@@ -10,4 +10,5 @@ import java.util.List;
 public interface SwitchParameterRepository extends CrudRepository<SwitchParameter,Long>
 {
     List<SwitchParameter> findAll();
+    SwitchParameter getById(Long id);
 }

@@ -10,4 +10,5 @@ import java.util.List;
 public interface ShapeRepository extends CrudRepository<Shape, Long>
 {
     List<Shape> findAll();
+    List<Shape> findShapesByParametersListContains(Long parameterId);
 }

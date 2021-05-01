@@ -80,12 +80,20 @@
                     <label for="shapeName">Komenda:</label>
                     <input type="text" name="command" class="form-control" th:field="*{command}" required />
                 </div>
-                <div th:each="switchParameter : ${switchesList}">
-                    <input name="switchParameter" type="checkbox" th:field="*{parametersList}" th:value="${switchParameter.id}" />
-                    <span th:text="${switchParameter.switchParam}">parameter</span><button class="button-icons"><i class="fas fa-minus-circle icon-cog"></i></button><br/>
+                <div th:if="${switchesList.empty}">
+                    <span> Brak przełączników. Dodaj jakieś aby przejść dalej! </span>
+                    <div class="form-group d-flex justify-content-end">
+                        <button class="btn btn-success" type="submit" disabled>Zapisz ></button>
+                    </div>
                 </div>
-                <div class="form-group d-flex justify-content-end">
-                    <button class="btn btn-success" type="submit">Zapisz ></button>
+                <div th:if="${switchesList.size()>0}">
+                    <div th:each="switchParameter : ${switchesList}">
+                        <input name="switchParameter" type="checkbox" th:field="*{parametersList}" th:value="${switchParameter.id}" />
+                        <span th:text="${switchParameter.switchParam}">parameter</span> <a th:href="@{/logged/shape/delete/{switchid}(switchid=${switchParameter.id})}"><button class="button-icons" type="button"><i class="fas fa-minus-circle icon-cog"></i></button></a><br/>
+                    </div>
+                    <div class="form-group d-flex justify-content-end">
+                        <button class="btn btn-success" type="submit">Zapisz ></button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -94,7 +102,7 @@
         <div class="col-4">
             <form method="POST" class="form-container p-3" th:action="@{/logged/shapes/newswitch}">
                 <div class="form-group d-flex flex-column">
-                    <label for="switchValue">Przelacznik:</label>
+                    <label for="switchValue">Przełącznik:</label>
                     <input type="text" id="switchValue" name="switchValue" th:value="${switchValue}"/>
                 </div>
                 <div class="d-flex justify-content-end">

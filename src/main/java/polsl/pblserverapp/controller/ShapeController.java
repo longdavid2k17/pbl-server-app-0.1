@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import polsl.pblserverapp.dao.ShapeRepository;
 import polsl.pblserverapp.dao.SwitchParameterRepository;
 import polsl.pblserverapp.dao.UserRepository;
@@ -44,13 +43,14 @@ public class ShapeController
     }
 
     @GetMapping("/logged/shape/new")
-    public String newShapeForm(HttpServletRequest request, Model model)
+    public String newShapeForm(HttpServletRequest request, Model model,@ModelAttribute("message") String message)
     {
         Principal principal = request.getUserPrincipal();
         if(principal!=null)
         {
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user",user);
+            model.addAttribute("message",message);
             model.addAttribute("shape",new Shape());
             model.addAttribute("switchesList",switchParameterRepository.findAll());
         }
@@ -144,6 +144,41 @@ public class ShapeController
         else
         {
             return "redirect:/logged";
+        }
+    }
+
+    @GetMapping("/logged/shape/delete/{switchid}")
+    public String deleteSwitch(@PathVariable Long switchid, Model model, HttpServletRequest request, RedirectAttributes ra)
+    {
+        Principal principal = request.getUserPrincipal();
+        if(principal!=null)
+        {
+            User user = userRepository.findByUsername(principal.getName());
+            model.addAttribute("user", user);
+            if(switchid==null)
+            {
+                return "redirect:/logged/shape/new";
+            }
+            else
+            {
+                SwitchParameter tempSwitch = switchParameterRepository.getById(switchid);
+                List<Shape> shapeList = shapeRepository.findAll();
+                for(Shape shape : shapeList)
+                {
+                    if(shape.getParametersList().contains(tempSwitch))
+                    {
+                        log.error("Cannot delete. One or more shapes has that parameter!");
+                        ra.addAttribute("message", "Nie można usunąć. Przynajmniej jeden zestaw ma taki parametr!");
+                        return "redirect:/logged/shape/new";
+                    }
+                }
+                switchParameterRepository.deleteById(switchid);
+                return "redirect:/logged/shape/new";
+            }
+        }
+        else
+        {
+            return "redirect:/";
         }
     }
 
