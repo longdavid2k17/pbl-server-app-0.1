@@ -39,6 +39,7 @@
       crossorigin="anonymous"
       defer
     ></script>
+    <script src="https://kit.fontawesome.com/b78e2da6f5.js" crossorigin="anonymous"></script>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -101,6 +102,9 @@
       <div th:each="shape : ${shapeList}">
         <div class="d-flex p-2 justify-content-center flex-wrap">
           <div class="col-3 m-2 shadow-lg p-4 bg-white">
+            <div class="d-flex justify-content-end">
+              <button class="button-icons"><i class="fas fa-trash icon-cog"></i></button>
+            </div>
             <h3 class="text-center"><p th:text="${shape.name}"></p></h3>
             <b class="text-center">Polecenie: <span th:text="${shape.command}"></span></b>
             <ul th:each="switchParameter : ${shape.parametersList}">
