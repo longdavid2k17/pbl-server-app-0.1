@@ -30,6 +30,9 @@ padding: 0;
 .button-icons:hover{
     cursor: pointer;
 }
+.button-icons:hover icon-cog{
+    color: red;
+}
 .approved-user{
     color: green;
 }
