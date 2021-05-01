@@ -19,6 +19,7 @@ import polsl.pblserverapp.utils.ApacheCommonsCsvUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
@@ -104,6 +105,31 @@ public class ShapeController
         }
     }
 
+    @Transactional
+    @GetMapping("/logged/shapes/delete/{shapeid}")
+    public String deleteShape(@PathVariable Long shapeid, Model model, HttpServletRequest request, RedirectAttributes ra)
+    {
+        Principal principal = request.getUserPrincipal();
+        User user = userRepository.findByUsername(principal.getName());
+        if(user.getRole().equals(null))
+        {
+            return "redirect:/logged";
+        }
+        else
+        {
+            if(shapeid==null)
+            {
+                ra.addAttribute("message","Błąd podczas usuwania!");
+                return "redirect:/logged/shapes";
+            }
+            else
+            {
+                shapeRepository.deleteByShapeId(shapeid);
+                return "redirect:/logged/shapes";
+            }
+        }
+    }
+
     @GetMapping("/logged/shapes/getAll")
     public void getAllShapes(HttpServletResponse response)
     {
@@ -113,7 +139,6 @@ public class ShapeController
             List<Shape> shapeList = shapeRepository.findAll();
             response.setContentType("text/csv");
             response.setHeader("Content-Disposition", "attachment; filename=shapes.csv");
-            //OpenCSVUtil.shapesToCsv(response.getWriter(),shapeList);
             ApacheCommonsCsvUtil.shapesToCsv(response.getWriter(),shapeList);
             log.info("File downloaded!");
         }
