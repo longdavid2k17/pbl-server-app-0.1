@@ -23,7 +23,6 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -79,9 +78,21 @@ public class ShapeController
                 return "shape/addShape";
             }
             log.info("SHAPE_ATTR: "+shape.getParametersList());
+            if(shape.getParametersList().size()==0)
+            {
+                model.addAttribute("user",user);
+                model.addAttribute("message","Nie można stworzyć zestawu bez parametrów!");
+                model.addAttribute("switchesList",switchParameterRepository.findAll());
+                return "shape/addShape";
+            }
+            if(shapeRepository.existsByName(shape.getName()))
+            {
+                model.addAttribute("user",user);
+                model.addAttribute("message","Zestaw o takiej nazwie istnieje!");
+                model.addAttribute("switchesList",switchParameterRepository.findAll());
+                return "shape/addShape";
+            }
             model.addAttribute("user", user);
-            shape.setCreationDate(new Date());
-            log.info("New shape: "+shape);
             shapeRepository.save(shape);
             return "redirect:/logged";
         }
@@ -137,10 +148,14 @@ public class ShapeController
         try
         {
             List<Shape> shapeList = shapeRepository.findAll();
-            response.setContentType("text/csv");
-            response.setHeader("Content-Disposition", "attachment; filename=shapes.csv");
-            ApacheCommonsCsvUtil.shapesToCsv(response.getWriter(),shapeList);
-            log.info("File downloaded!");
+            if(shapeList.size()!=0)
+            {
+                response.setContentType("text/csv");
+                response.setHeader("Content-Disposition", "attachment; filename=shapes.csv");
+                ApacheCommonsCsvUtil.shapesToCsv(response.getWriter(),shapeList);
+                log.info("File downloaded!");
+            }
+
         }
         catch (IOException e)
         {

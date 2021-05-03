@@ -122,12 +122,12 @@
           </div>
         </div>
       </div>
-      <a th:href="@{/logged/shapes/getAll}"><button class="btn btn-primary">Eksportuj do pliku CSV</button></a>
-
-
+      <div th:if="${!shapeList.empty}">
+        <a th:href="@{/logged/shapes/getAll}"><button class="btn btn-primary">Eksportuj do pliku CSV</button></a>
+      </div>
 
       <button class="import-button" title="Importuj zestaw/y z pliku .CSV" data-target="#uploadModal" data-toggle="modal">+</button>
-      <!-- Modal -->
+
       <div
         class="modal fade"
         id="exampleModal"

@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class FileLoaderService
 {
-    private ShapeRepository shapeRepository;
+    private final ShapeRepository shapeRepository;
     private static final Logger log = LoggerFactory.getLogger(FileLoaderService.class);
 
     public FileLoaderService(ShapeRepository shapeRepository)
@@ -32,7 +32,7 @@ public class FileLoaderService
         catch(Exception e)
         {
             log.error("Error while importing .csv file. Code: "+e.getMessage());
-            throw new RuntimeException("Błąd! " + e.getMessage());
+            throw new RuntimeException("Error! " + e.getMessage());
         }
     }
 }

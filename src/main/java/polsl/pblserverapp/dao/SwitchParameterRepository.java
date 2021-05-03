@@ -11,4 +11,5 @@ public interface SwitchParameterRepository extends CrudRepository<SwitchParamete
 {
     List<SwitchParameter> findAll();
     SwitchParameter getById(Long id);
+    SwitchParameter getBySwitchParam(String s);
 }

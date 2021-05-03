@@ -12,4 +12,5 @@ public interface ShapeRepository extends CrudRepository<Shape, Long>
     List<Shape> findAll();
     List<Shape> findShapesByParametersListContains(Long parameterId);
     int deleteByShapeId(Long id);
+    boolean existsByName(String s);
 }

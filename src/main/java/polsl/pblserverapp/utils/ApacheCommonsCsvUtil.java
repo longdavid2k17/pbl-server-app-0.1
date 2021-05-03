@@ -16,6 +16,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 @Service
 public class ApacheCommonsCsvUtil
@@ -23,6 +24,7 @@ public class ApacheCommonsCsvUtil
     private static final Logger log = LoggerFactory.getLogger(ApacheCommonsCsvUtil.class);
     private static String csvExtension = "csv";
     private static SwitchParameterRepository switchParameterRepository;
+    private static final String COMMA_DELIMITER = ",";
 
     public ApacheCommonsCsvUtil(SwitchParameterRepository switchParameterRepository)
     {
@@ -32,7 +34,7 @@ public class ApacheCommonsCsvUtil
     public static void shapesToCsv(Writer writer, List<Shape> shapeList) throws IOException
     {
         try (CSVPrinter csvPrinter = new CSVPrinter(writer,
-                CSVFormat.DEFAULT.withHeader("shapeId", "name", "creationDate", "command","parametersList")))
+                CSVFormat.DEFAULT.withHeader("shapeId", "name", "command","parametersList")))
         {
             if(shapeList.size()==0)
             {
@@ -42,8 +44,7 @@ public class ApacheCommonsCsvUtil
             {
                 for (Shape shape : shapeList)
                 {
-                    List<String> data = Arrays.asList(String.valueOf(shape.getShapeId()), String.valueOf(shape.getName()),
-                            String.valueOf(shape.getCreationDate()), String.valueOf(shape.getCommand()),String.valueOf(shape.getParametersList().toString()));
+                    List<String> data = Arrays.asList(String.valueOf(shape.getShapeId()), String.valueOf(shape.getName()), String.valueOf(shape.getCommand()),String.valueOf(shape.getParametersList().toString()));
                     csvPrinter.printRecord(data);
                 }
                 csvPrinter.flush();
@@ -58,45 +59,80 @@ public class ApacheCommonsCsvUtil
 
     public static List<Shape> parseCsvFile(InputStream is)
     {
-        BufferedReader fileReader = null;
-        CSVParser csvParser = null;
-        List<Shape> shapeList = new ArrayList<Shape>();
-
-        try
+        List<List<String>> records = new ArrayList<>();
+        try (Scanner scanner = new Scanner(is))
         {
-            fileReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-            csvParser = new CSVParser(fileReader,
-                    CSVFormat.DEFAULT.withFirstRecordAsHeader().withIgnoreHeaderCase().withTrim());
-            Iterable<CSVRecord> csvRecords = csvParser.getRecords();
-
-            for (CSVRecord csvRecord : csvRecords)
+            while (scanner.hasNextLine())
             {
-                //List<SwitchParameter> switchParameters = String.valueOf(csvRecord.get("parametersList"));
-                List<SwitchParameter>switchParameters = switchParameterRepository.findAll();
-                Shape shape = new Shape(Long.parseLong(csvRecord.get("shapeId")), csvRecord.get("name"),
-                        csvRecord.get("creationDate"), csvRecord.get("command"),switchParameters);
+                records.add(getRecordFromLine(scanner.nextLine()));
+            }
+        }
+
+        int counter = 0;
+        List<Shape> shapeList = new ArrayList<>();
+        for(List<String> s : records)
+        {
+            if(!s.toString().equals("[shapeId, name, command, parametersList]"))
+            {
+                Shape shape = new Shape();
+                shape.setShapeId(Long.valueOf(s.get(0)));
+                shape.setName(s.get(1));
+                shape.setCommand(s.get(2));
+
+                List<SwitchParameter> switchParameters = new ArrayList<>();
+
+                List<String> tablicaArg = new ArrayList<>();
+                for(int i=3;i<s.size();i++)
+                {
+                    tablicaArg.add(s.get(i));
+                }
+                for(int j=0;j< tablicaArg.size();j++)
+                {
+                    Long switchId = null;
+                    String switchValue = null;
+
+                    if(j==0 || j%2==0)
+                    {
+                        String idString = tablicaArg.get(j);
+                        idString = idString.substring(idString.indexOf("=") + 1);
+                        switchId = Long.valueOf(idString);
+                        counter++;
+                    }
+                    else
+                    {
+                        String switchString = tablicaArg.get(j);
+                        switchString = switchString.substring(switchString.indexOf("=") + 1);
+                        switchString = switchString.substring(0, switchString.indexOf(")"));
+                        switchValue = switchString;
+                        counter++;
+                    }
+                    if(counter==2)
+                    {
+                        SwitchParameter loadedSwitch = switchParameterRepository.getBySwitchParam(switchValue);
+                        switchParameters.add(loadedSwitch);
+                        counter=0;
+                    }
+                }
+                shape.setParametersList(switchParameters);
                 shapeList.add(shape);
             }
-        }
-        catch (Exception e)
-        {
-            System.out.println("Reading CSV Error!");
-            e.printStackTrace();
-        }
-        finally
-        {
-            try
-            {
-                fileReader.close();
-                csvParser.close();
-            }
-            catch (IOException e)
-            {
-                System.out.println("Closing fileReader/csvParser Error!");
-                e.printStackTrace();
-            }
+            else continue;
         }
         return shapeList;
+    }
+
+    public static List<String> getRecordFromLine(String line)
+    {
+        List<String> values = new ArrayList<String>();
+        try (Scanner rowScanner = new Scanner(line))
+        {
+            rowScanner.useDelimiter(COMMA_DELIMITER);
+            while (rowScanner.hasNext())
+            {
+                values.add(rowScanner.next());
+            }
+        }
+        return values;
     }
 
     public static boolean isCSVFile(MultipartFile file)
