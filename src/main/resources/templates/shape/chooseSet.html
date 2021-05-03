@@ -99,9 +99,9 @@
       <div th:if="${shapeList.empty}">
         <span>Nie ma zdefiniowanego żadnego zestawu</span>
       </div>
-      <div th:each="shape : ${shapeList}">
-        <div class="d-flex p-2 justify-content-center flex-wrap">
-          <div class="col-3 m-2 shadow-lg p-4 bg-white">
+      <div class="d-flex p-2 justify-content-center flex-wrap">
+
+          <div th:each="shape : ${shapeList}" class="col-3 m-2 shadow-lg p-4 bg-white">
             <div class="d-flex justify-content-end">
               <a th:href="@{/logged/shapes/delete/{shapeid}(shapeid=${shape.shapeId})}"><button class="button-icons" title="Usuń zestaw"><i class="fas fa-trash icon-cog"></i></button></a>
             </div>
@@ -120,9 +120,9 @@
               </button>
             </div>
           </div>
-        </div>
+
       </div>
-      <div th:if="${!shapeList.empty}">
+      <div th:if="${!shapeList.empty}" class="d-flex justify-content-center">
         <a th:href="@{/logged/shapes/getAll}"><button class="btn btn-primary">Eksportuj do pliku CSV</button></a>
       </div>
 

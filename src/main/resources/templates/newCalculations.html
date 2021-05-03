@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>PBL</title>
+    <link
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+            crossorigin="anonymous"
+    />
+    <link
+            href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css"
+            rel="stylesheet"
+            crossorigin="anonymous"
+    />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/globalStyles.css}" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous" defer></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
+    <script src="https://kit.fontawesome.com/b78e2da6f5.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" th:href="@{/logged}">PBL</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav w-100">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Zestawy
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <div th:if="${user.role=='ROLE_ADMIN'}">
+                        <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
+                        <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
+                        <a class="dropdown-item" href="#">Nowe zadanie</a>
+                    </div>
+                    <div th:if="${user.role!='ROLE_ADMIN'}">
+                        <a class="dropdown-item" th:href="@{/logged/shapes}">Istniejące zestawy</a>
+                        <a class="dropdown-item" href="#">Nowe zadanie</a>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/logged/results}">Wyniki</a>
+            </li>
+            <li class="nav-item">
+                <div th:if="${user.role=='ROLE_ADMIN'}">
+                    <a class="nav-link" th:href="@{/manager}">Zarządzaj użytkownikami</a>
+                </div>
+            </li>
+            <li class="nav-item ml-auto">
+                <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container">
+    <div class="row d-flex p-2 justify-content-center">
+        <div class="col-4">
+            <form method="POST" class="form-container p-3">
+                <h2>Wybierz zestaw</h2>
+                <div class="form-group">
+                    <label for="zestaw">Nazwa zestawu:</label>
+                    <select id="zestaw" name="zestaw" class="form-control" required th:field="*{zestaw}">
+                        <option value="zestaw 1">zestaw 1</option>
+                        <option value="zestaw 2">zestaw 2</option>
+                    </select>
+                </div>
+            </form>
+            <p>Nazwa <span>Polecenie</span></p>
+        </div>
+    </div>
+    <div class="row d-flex p-2 justify-content-center">
+        <div class="col-4">
+            <form method="POST" class="form-container p-3" th:action="@{}">
+                <div class="form-group d-flex flex-column">
+                    <label for="parametr1">Parametr:</label>
+                    <input type="text" id="parametr1" name="switchValue" th:value="${switchValue}"/>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-success" type="reset">Reset</button>
+                    <button class="btn btn-success" type="submit">Przeslij</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
