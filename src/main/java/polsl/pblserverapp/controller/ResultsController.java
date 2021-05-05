@@ -23,16 +23,16 @@ public class ResultsController
     public String results(Model model, HttpServletRequest request)
     {
         Principal principal = request.getUserPrincipal();
-        User user = userRepository.findByUsername(principal.getName());
-        if(!user.getRole().equals("ROLE_ADMIN"))
+
+        if(principal!=null)
         {
-            return "redirect:/logged";
-        }
-        else
-        {
+            User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user",user);
             return "resultDir/results";
         }
-
+        else
+        {
+            return "redirect:/logged";
+        }
     }
 }

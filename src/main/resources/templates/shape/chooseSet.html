@@ -70,11 +70,11 @@
               <div th:if="${user.role=='ROLE_ADMIN'}">
                 <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
                 <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
-                <a class="dropdown-item" href="#">Nowe zadanie</a>
+                <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
               </div>
               <div th:if="${user.role!='ROLE_ADMIN'}">
-                <a class="dropdown-item" href="#">Zestaw parametrów</a>
-                <a class="dropdown-item" href="#">Nowe zadanie</a>
+                <a class="dropdown-item" th:href="@{/logged/shapes}">Zestaw parametrów</a>
+                <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
               </div>
             </div>
           </li>
@@ -111,13 +111,9 @@
               <li><span th:text="${switchParameter.switchParam}"></span></li>
             </ul>
             <div class="d-flex justify-content-center">
-              <button
-                      type="button"
-                      class="btn btn-primary"
-                      data-toggle="modal"
-                      data-target="#exampleModal">
-                Wybierz
-              </button>
+              <a th:href="@{/logged/tasks/choosed/{id}(id=${shape.shapeId})}"> <button type="button" class="btn btn-primary">
+                Wybierz</button>
+              </a>
             </div>
           </div>
 

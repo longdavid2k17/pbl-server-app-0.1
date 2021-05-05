@@ -42,11 +42,11 @@
                     <div th:if="${user.role=='ROLE_ADMIN'}">
                         <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
                         <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
-                        <a class="dropdown-item" href="#">Nowe zadanie</a>
+                        <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
                     </div>
                     <div th:if="${user.role!='ROLE_ADMIN'}">
                         <a class="dropdown-item" th:href="@{/logged/shapes}">Istniejące zestawy</a>
-                        <a class="dropdown-item" href="#">Nowe zadanie</a>
+                        <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
                     </div>
                 </div>
             </li>
@@ -67,29 +67,36 @@
 <div class="container">
     <div class="row d-flex p-2 justify-content-center">
         <div class="col-4">
-            <form method="POST" class="form-container p-3">
+            <form method="POST" class="form-container p-3"  th:action="@{/logged/tasks/choose}">
                 <h2>Wybierz zestaw</h2>
                 <div class="form-group">
-                    <label for="zestaw">Nazwa zestawu:</label>
-                    <select id="zestaw" name="zestaw" class="form-control" required th:field="*{zestaw}">
-                        <option value="zestaw 1">zestaw 1</option>
-                        <option value="zestaw 2">zestaw 2</option>
+                    <label for="shape">Nazwa zestawu:</label>
+                    <select id="shape" name="shape" class="form-control" onchange='if(this.value != 0) { this.form.submit(); }'>
+                        <option name="shape" value=""> Wybierz zestaw </option>
+                        <option name="shape" th:each="shape : ${shapeList}" th:value="${shape.shapeId}" th:text="${shape.name}">zestaw</option>
                     </select>
                 </div>
             </form>
-            <p>Nazwa <span>Polecenie</span></p>
         </div>
     </div>
     <div class="row d-flex p-2 justify-content-center">
         <div class="col-4">
-            <form method="POST" class="form-container p-3" th:action="@{}">
+            <form method="POST" class="form-container p-3" >
                 <div class="form-group d-flex flex-column">
-                    <label for="parametr1">Parametr:</label>
-                    <input type="text" id="parametr1" name="switchValue" th:value="${switchValue}"/>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-success" type="reset">Reset</button>
-                    <button class="btn btn-success" type="submit">Przeslij</button>
+                    <div th:if="${selectedShape!=null}">
+                        <b><span th:text="${selectedShape.name}"></span></b> <span th:text="${selectedShape.command}"></span>
+                        <div th:each="parameter : ${selectedShape.parametersList}">
+                            <label for="parametr1"><span th:text="${parameter.switchParam}"></span></label>
+                            <input type="text" id="parametr1" name="switchValue" th:value="${switchValue}" placeholder="wartość"/>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button class="btn btn-success" type="reset">Reset</button>
+                            <button class="btn btn-success" type="submit">Prześlij</button>
+                        </div>
+                    </div>
+                    <div th:if="${selectedShape==null}">
+                        <p>Wybierz zestaw</p>
+                    </div>
                 </div>
             </form>
         </div>

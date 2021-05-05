@@ -42,11 +42,11 @@
           <div th:if="${user.role=='ROLE_ADMIN'}">
             <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
             <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
-            <a class="dropdown-item" href="#">Nowe zadanie</a>
+            <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
           </div>
           <div th:if="${user.role!='ROLE_ADMIN'}">
             <a class="dropdown-item" th:href="@{/logged/shapes}">Istniejące zestawy</a>
-            <a class="dropdown-item" href="#">Nowe zadanie</a>
+            <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
           </div>
         </div>
       </li>
