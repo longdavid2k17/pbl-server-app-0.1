@@ -108,7 +108,16 @@ public class ApacheCommonsCsvUtil
                     }
                     if(counter==2)
                     {
-                        SwitchParameter loadedSwitch = switchParameterRepository.getBySwitchParam(switchValue);
+                        SwitchParameter loadedSwitch = null;
+                        if(switchParameterRepository.existsBySwitchParam(switchValue))
+                        {
+                            loadedSwitch = switchParameterRepository.getBySwitchParam(switchValue);
+                        }
+                        else
+                        {
+                            switchParameterRepository.save(new SwitchParameter(switchValue));
+                            loadedSwitch = switchParameterRepository.getBySwitchParam(switchValue);
+                        }
                         switchParameters.add(loadedSwitch);
                         counter=0;
                     }
