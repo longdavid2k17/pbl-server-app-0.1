@@ -18,5 +18,6 @@ public class Result
     private String endingDate;
     private String resultStatus;
     private String resultsUrl;
-
+    private Long shapeId;
+    private String fullCommand;
 }

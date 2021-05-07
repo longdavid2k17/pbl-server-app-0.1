@@ -72,11 +72,20 @@
             <th scope="col">Data zakończenia</th>
             <th scope="col">Status</th>
             <th scope="col">Ścieżka do pliku</th>
+            <th scope="col"></th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td colspan="4"> Brak wyników </td>
+        <tr th:if="${results.empty}">
+            <td colspan="6"> Brak wyników </td>
+        </tr>
+        <tr th:each="result : ${results}">
+            <td th:text="${result.id}">Id</td>
+            <td th:text="${result.creationDate}">creationDate</td>
+            <td th:text="${result.endingDate}">endingDate</td>
+            <td th:text="${result.resultStatus}">resultStatus</td>
+            <td th:text="${result.resultsUrl}">resultsUrl</td>
+            <td><button type="button" class="btn btn-primary">Podgląd</button></td>
         </tr>
         </tbody>
     </table>

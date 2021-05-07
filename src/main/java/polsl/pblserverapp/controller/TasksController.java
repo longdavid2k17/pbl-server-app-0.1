@@ -13,6 +13,7 @@ import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.Shape;
 import polsl.pblserverapp.model.Task;
 import polsl.pblserverapp.model.User;
+import polsl.pblserverapp.services.QueueService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -24,12 +25,14 @@ public class TasksController
     private final Logger logger = LoggerFactory.getLogger(TasksController.class);
     private final UserRepository userRepository;
     private final ShapeRepository shapeRepository;
+    private final QueueService queueService;
     private Shape selectedShapeGlobal;
 
-    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository)
+    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService)
     {
         this.userRepository = userRepository;
         this.shapeRepository = shapeRepository;
+        this.queueService = queueService;
         selectedShapeGlobal = null;
     }
 
@@ -42,7 +45,6 @@ public class TasksController
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("shapeList",shapeRepository.findAll());
             model.addAttribute("user",user);
-            //model.addAttribute("shape",new Shape());
             return "newCalculations";
         }
             return "redirect:/logged";
@@ -123,8 +125,7 @@ public class TasksController
             }
             task.setShape(selectedShapeGlobal);
             task.setCreationDate(String.valueOf(new Date()));
-            logger.info("Valued task ready to send: "+task.toString());
-            //TODO Przekazywanie taska do serwisu Rabbita
+            queueService.sendTask(task);
             return "redirect:/logged/results";
         }
     }
