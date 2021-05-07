@@ -16,6 +16,7 @@ import polsl.pblserverapp.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.util.Date;
 
 @Controller
 public class TasksController
@@ -23,11 +24,13 @@ public class TasksController
     private final Logger logger = LoggerFactory.getLogger(TasksController.class);
     private final UserRepository userRepository;
     private final ShapeRepository shapeRepository;
+    private Shape selectedShapeGlobal;
 
     public TasksController(UserRepository userRepository,ShapeRepository shapeRepository)
     {
         this.userRepository = userRepository;
         this.shapeRepository = shapeRepository;
+        selectedShapeGlobal = null;
     }
 
     @GetMapping("/logged/tasks")
@@ -59,6 +62,7 @@ public class TasksController
             if(shapeId!=null && !shapeId.equals(""))
             {
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
+                selectedShapeGlobal=selectedShape;
                 logger.info("Given ID = "+ shapeId);
                 model.addAttribute("shapeList",shapeRepository.findAll());
                 model.addAttribute("user",user);
@@ -86,6 +90,7 @@ public class TasksController
             if(shapeId!=null && !shapeId.equals(""))
             {
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
+                selectedShapeGlobal = selectedShape;
                 logger.info("Given ID = "+ shapeId);
                 model.addAttribute("shapeList",shapeRepository.findAll());
                 model.addAttribute("user",user);
@@ -97,6 +102,30 @@ public class TasksController
                 logger.error("Given id is wrong: "+ shapeId);
                 return "redirect:/logged/tasks";
 
+        }
+    }
+
+    @PostMapping("/logged/tasks/send")
+    public String sendTaskForm(Task task)
+    {
+        logger.info(task.toString());
+        if(selectedShapeGlobal==null)
+        {
+            logger.error("Wrong value of global shape!");
+            return "redirect:/logged/tasks";
+        }
+        else
+        {
+            if(task.getArgsValues().size()!= selectedShapeGlobal.getParametersList().size())
+            {
+                logger.error("List of values has different size than primary shape!");
+                return "redirect:/";
+            }
+            task.setShape(selectedShapeGlobal);
+            task.setCreationDate(String.valueOf(new Date()));
+            logger.info("Valued task ready to send: "+task.toString());
+            //TODO Przekazywanie taska do serwisu Rabbita
+            return "redirect:/logged/results";
         }
     }
 }
