@@ -45,7 +45,7 @@ public class QueueService
         result.setEndingDate("-");
         result.setShapeId(task.getShape().getShapeId());
         result.setFullCommand(buildedTask.toString());
-        result.setResultsUrl("-");
+        result.setResultsUrl("Domyślna lokalizacja");
         resultsRepository.save(result);
     }
 
