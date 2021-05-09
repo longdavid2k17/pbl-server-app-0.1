@@ -79,14 +79,27 @@
         <tr th:if="${results.empty}">
             <td colspan="6"> Brak wyników </td>
         </tr>
-        <tr th:each="result : ${results}">
+        <div th:each="result : ${results}">
+        <tr>
             <td th:text="${result.id}">Id</td>
             <td th:text="${result.creationDate}">creationDate</td>
             <td th:text="${result.endingDate}">endingDate</td>
             <td th:text="${result.resultStatus}">resultStatus</td>
             <td th:text="${result.resultsUrl}">resultsUrl</td>
-            <td><button type="button" class="btn btn-primary">Podgląd</button></td>
+            <td><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#podglad1" aria-expanded="false" aria-controls="collapseExample">
+                Podgląd
+            </button></td>
         </tr>
+        <tr>
+            <td colspan="6">
+                <div class="collapse" id="podglad1">
+                    <div class="card card-body">
+                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                    </div>
+                </div>
+            </td>
+        </tr>
+        </div>
         </tbody>
     </table>
 </div>
