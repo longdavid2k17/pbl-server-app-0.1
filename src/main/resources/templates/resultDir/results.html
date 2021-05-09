@@ -86,12 +86,12 @@
                 <td th:text="${result.endingDate}">endingDate</td>
                 <td th:text="${result.resultStatus}">resultStatus</td>
                 <td><a href="file:///c:/"><span th:text="${result.resultsUrl}">resultsUrl</span></a></td>
-                <td><button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#podglad1" aria-expanded="false" aria-controls="collapseExample">
+                <td><button class="btn btn-primary" type="button" data-toggle="collapse" th:data-target="'#podglad'+${result.id}" aria-expanded="false" aria-controls="collapseExample">
                     Podgląd</button></td>
             </tr>
             <tr>
                 <td colspan="6">
-                    <div class="collapse" id="podglad1">
+                    <div class="collapse" th:id="'podglad'+${result.id}">
                         <div class="card card-body">
                             Pełna komenda użyta do zadania: <span th:text="${result.fullCommand}"></span> ID zestawu <span th:text="${result.shapeId}"></span>
                         </div>
