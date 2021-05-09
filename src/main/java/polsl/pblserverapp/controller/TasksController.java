@@ -65,7 +65,6 @@ public class TasksController
             {
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
                 selectedShapeGlobal=selectedShape;
-                logger.info("Given ID = "+ shapeId);
                 model.addAttribute("shapeList",shapeRepository.findAll());
                 model.addAttribute("user",user);
                 model.addAttribute("task",new Task());

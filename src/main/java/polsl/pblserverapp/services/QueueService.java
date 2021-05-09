@@ -60,8 +60,7 @@ public class QueueService
         }
         else
             globalMessage = message.toString();
-        logger.info("Recived: "+globalMessage);
-        return true;
+            return true;
     }
 
     public String getGlobalMessage()
