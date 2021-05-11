@@ -27,6 +27,7 @@ public class TasksController
     private final ShapeRepository shapeRepository;
     private final QueueService queueService;
     private Shape selectedShapeGlobal;
+    private String ownerUsername;
 
     public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService)
     {
@@ -45,6 +46,7 @@ public class TasksController
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("shapeList",shapeRepository.findAll());
             model.addAttribute("user",user);
+            ownerUsername = principal.getName();
             return "newCalculations";
         }
             return "redirect:/logged";
@@ -63,6 +65,7 @@ public class TasksController
             User user = userRepository.findByUsername(principal.getName());
             if(shapeId!=null && !shapeId.equals(""))
             {
+                ownerUsername = principal.getName();
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
                 selectedShapeGlobal=selectedShape;
                 model.addAttribute("shapeList",shapeRepository.findAll());
@@ -90,6 +93,7 @@ public class TasksController
             User user = userRepository.findByUsername(principal.getName());
             if(shapeId!=null && !shapeId.equals(""))
             {
+                ownerUsername = principal.getName();
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
                 selectedShapeGlobal = selectedShape;
                 logger.info("Given ID = "+ shapeId);
@@ -123,6 +127,7 @@ public class TasksController
                 return "redirect:/";
             }
             task.setShape(selectedShapeGlobal);
+            task.setOwnerUsername(ownerUsername);
             task.setCreationDate(String.valueOf(new Date()));
             queueService.sendTask(task);
             return "redirect:/logged/results";

@@ -19,5 +19,6 @@ public class Result
     private String resultStatus;
     private String resultsUrl;
     private Long shapeId;
+    private String ownerUsername;
     private String fullCommand;
 }

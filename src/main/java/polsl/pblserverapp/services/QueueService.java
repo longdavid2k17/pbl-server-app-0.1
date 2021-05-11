@@ -34,19 +34,21 @@ public class QueueService
         StringBuilder buildedTask = new StringBuilder(task.getShape().getCommand() + " ");
         for(int i=0;i<task.getShape().getParametersList().size();i++)
         {
-            String pair = task.getShape().getParametersList().get(i).getSwitchParam()+":"+task.getArgsValues().get(i)+" ";
+            //String pair = task.getShape().getParametersList().get(i).getSwitchParam()+":"+task.getArgsValues().get(i)+" ";
+            String pair = task.getShape().getParametersList().get(i).getSwitchParam()+task.getArgsValues().get(i)+" ";
             buildedTask.append(pair);
         }
-        logger.info("Final command: "+buildedTask);
-        rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), buildedTask.toString());
+
         Result result = new Result();
         result.setResultStatus("Rozpoczęto");
         result.setCreationDate(task.getCreationDate());
         result.setEndingDate("-");
+        result.setOwnerUsername(task.getOwnerUsername());
         result.setShapeId(task.getShape().getShapeId());
         result.setFullCommand(buildedTask.toString());
         result.setResultsUrl("Domyślna lokalizacja");
-        resultsRepository.save(result);
+        Result savedResult = resultsRepository.save(result);
+        rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), "Id"+savedResult.getId()+" "+ buildedTask);
     }
 
 

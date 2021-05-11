@@ -15,6 +15,7 @@ public class Task
     private Long taskId;
     private String creationDate;
     private Shape shape;
+    private String ownerUsername;
     private List<String> argsValues;
 
     @Override
@@ -23,6 +24,7 @@ public class Task
                 "taskId=" + taskId +
                 ", creationDate='" + creationDate + '\'' +
                 ", shape=" + shape +
+                ", ownerUsername='" + ownerUsername + '\'' +
                 ", argsValues=" + argsValues +
                 '}';
     }

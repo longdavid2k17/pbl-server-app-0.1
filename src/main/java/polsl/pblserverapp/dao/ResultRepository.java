@@ -9,4 +9,5 @@ public interface ResultRepository extends CrudRepository<Result, Long>
 {
     List<Result> findAll();
     List<Result> findByResultStatus(String s);
+    List<Result> findByOwnerUsername(String s);
 }

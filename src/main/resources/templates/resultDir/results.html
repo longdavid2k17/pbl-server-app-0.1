@@ -94,7 +94,8 @@
                     <div class="collapse" th:id="'podglad'+${result.id}">
                         <div class="card card-body">
                             <p>Pełna komenda użyta do zadania: <b><span th:text="${result.fullCommand}"></span></b></p>
-                            <p> ID zestawu: <a th:href="@{/logged/tasks/choosed/{id}(id=${result.shapeId})}"><b><span th:text="${result.shapeId}" title="Kliknij aby utworzyć nowe zadanie z tym zestawem"></span></b></a></p>
+                            <p>ID zestawu: <a th:href="@{/logged/tasks/choosed/{id}(id=${result.shapeId})}"><b><span th:text="${result.shapeId}" title="Kliknij aby utworzyć nowe zadanie z tym zestawem"></span></b></a></p>
+                            <p>Autor zadania: <b><span th:text="${result.ownerUsername}"></span></b></p>
                         </div>
                     </div>
                 </td>

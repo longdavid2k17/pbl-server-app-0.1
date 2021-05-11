@@ -37,7 +37,15 @@ public class ResultsController
         {
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user",user);
-            model.addAttribute("results",resultRepository.findAll());
+            if(user.getRole().equals("ROLE_ADMIN"))
+            {
+                model.addAttribute("results",resultRepository.findAll());
+            }
+            else
+            {
+                model.addAttribute("results",resultRepository.findByOwnerUsername(user.getUsername()));
+            }
+
             if(queueService.areAnyMessages())
             {
                 logger.info(queueService.getGlobalMessage());
