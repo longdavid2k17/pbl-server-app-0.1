@@ -67,10 +67,30 @@
     <table class="table">
         <thead class="thead-dark">
         <tr>
+                <td>Data rozpoczęcia</td>
+                <td>Godzina rozpoczęcia</td>
+                <td>Data zakończenia</td>
+                <td>Godzina zakończenia</td>
+                <td>Użytkownik</td>
+        </tr>
+        <tr>
+            <form>
+                <td><input type="date"/></td>
+                <td><input type="time"/></td>
+                <td><input type="date"/></td>
+                <td><input type="time"/></td>
+                <td><select>
+                    <option>User1</option>
+                </select></td>
+                <td><button type="submit" class="btn btn-primary">Filtruj</button></td>
+            </form>
+        </tr>
+        <tr>
             <th scope="col">ID</th>
             <th scope="col">Data rozpoczęcia</th>
             <th scope="col">Data zakończenia</th>
             <th scope="col">Status</th>
+            <th scope="col">Uwagi</th>
             <th scope="col">Ścieżka do pliku</th>
             <th scope="col"></th>
         </tr>
@@ -85,6 +105,7 @@
                 <td th:text="${result.creationDate}">creationDate</td>
                 <td th:text="${result.endingDate}">endingDate</td>
                 <td th:text="${result.resultStatus}">resultStatus</td>
+                <td>-</td>
                 <td><a href="file:///c:/"><span th:text="${result.resultsUrl}">resultsUrl</span></a></td>
                 <td><button class="btn btn-primary" type="button" data-toggle="collapse" th:data-target="'#podglad'+${result.id}" aria-expanded="false" aria-controls="collapseExample">
                     Podgląd</button></td>
