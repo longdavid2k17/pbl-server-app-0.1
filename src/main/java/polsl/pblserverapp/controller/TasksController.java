@@ -17,6 +17,7 @@ import polsl.pblserverapp.services.QueueService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Controller
@@ -28,6 +29,9 @@ public class TasksController
     private final QueueService queueService;
     private Shape selectedShapeGlobal;
     private String ownerUsername;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+
 
     public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService)
     {
@@ -126,9 +130,11 @@ public class TasksController
                 logger.error("List of values has different size than primary shape!");
                 return "redirect:/";
             }
+            Date date = new Date();
             task.setShape(selectedShapeGlobal);
             task.setOwnerUsername(ownerUsername);
-            task.setCreationDate(String.valueOf(new Date()));
+            task.setCreationDate(dateFormat.format(date));
+            task.setCreationHour(hourFormat.format(date));
             queueService.sendTask(task);
             return "redirect:/logged/results";
         }

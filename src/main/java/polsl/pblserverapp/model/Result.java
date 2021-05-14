@@ -15,7 +15,9 @@ public class Result
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String creationDate;
+    private String creationHour;
     private String endingDate;
+    private String endingHour;
     private String resultStatus;
     private String resultsUrl;
     private Long shapeId;

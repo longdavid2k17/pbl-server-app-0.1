@@ -66,6 +66,7 @@
 <div class="container">
     <table class="table">
         <thead class="thead-dark">
+        <div th:if="${user.role=='ROLE_ADMIN'}">
         <tr>
                 <td>Data rozpoczęcia</td>
                 <td>Godzina rozpoczęcia</td>
@@ -74,17 +75,38 @@
                 <td>Użytkownik</td>
         </tr>
         <tr>
-            <form>
-                <td><input type="date"/></td>
-                <td><input type="time"/></td>
-                <td><input type="date"/></td>
-                <td><input type="time"/></td>
-                <td><select>
-                    <option>User1</option>
-                </select></td>
+            <form th:object="${filter}" th:action="@{/logged/results/admin}" method="post">
+                <td><input type="date" th:field="*{startDate}"/></td>
+                <td><input type="time" th:field="*{startHour}" /></td>
+                <td><input type="date" th:field="*{endDate}"/></td>
+                <td><input type="time" th:field="*{endHour}"/></td>
+                <td>
+                    <select id="userId" name="userId">
+                        <option name="userId" value=""> Wybierz użytkownika </option>
+                        <option name="userId" th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}" th:field="*{userId}">user</option>
+                    </select>
+                </td>
                 <td><button type="submit" class="btn btn-primary">Filtruj</button></td>
             </form>
         </tr>
+        </div>
+        <div th:if="${user.role!='ROLE_ADMIN'}">
+            <tr>
+                <td>Data rozpoczęcia</td>
+                <td>Godzina rozpoczęcia</td>
+                <td>Data zakończenia</td>
+                <td>Godzina zakończenia</td>
+            </tr>
+            <tr>
+                <form th:object="${filter}" th:action="@{/logged/results/user}" method="post">
+                    <td><input type="date" th:field="*{startDate}"/></td>
+                    <td><input type="time" th:field="*{startHour}" /></td>
+                    <td><input type="date" th:field="*{endDate}"/></td>
+                    <td><input type="time" th:field="*{endHour}"/></td>
+                    <td><button type="submit" class="btn btn-primary">Filtruj</button></td>
+                </form>
+            </tr>
+        </div>
         <tr>
             <th scope="col">ID</th>
             <th scope="col">Data rozpoczęcia</th>
@@ -102,8 +124,13 @@
         <div th:each="result : ${results}">
             <tr>
                 <td th:text="${result.id}">Id</td>
-                <td th:text="${result.creationDate}">creationDate</td>
-                <td th:text="${result.endingDate}">endingDate</td>
+                <td><span th:text="${result.creationDate}"></span> <span th:text="${result.creationHour}"></span></td>
+                <div th:if="${result.endingDate=='-'}">
+                    <td>-</td>
+                </div>
+                <div th:if="${result.endingDate!='-'}">
+                    <td><span th:text="${result.endingDate}"></span> <span th:text="${result.endingHour}"></span></td>
+                </div>
                 <td th:text="${result.resultStatus}">resultStatus</td>
                 <td>-</td>
                 <td><a href="file:///c:/"><span th:text="${result.resultsUrl}">resultsUrl</span></a></td>

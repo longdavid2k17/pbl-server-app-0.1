@@ -14,6 +14,7 @@ public class Task
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskId;
     private String creationDate;
+    private String creationHour;
     private Shape shape;
     private String ownerUsername;
     private List<String> argsValues;
