@@ -49,7 +49,7 @@ public class QueueService
         result.setOwnerUsername(task.getOwnerUsername());
         result.setShapeId(task.getShape().getShapeId());
         result.setFullCommand(buildedTask.toString());
-        result.setResultsUrl("Domyślna lokalizacja");
+        result.setResultsUrl(configuration.getLocalizationUrl());
         Result savedResult = resultsRepository.save(result);
         rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), "Id"+savedResult.getId()+" "+ buildedTask);
     }

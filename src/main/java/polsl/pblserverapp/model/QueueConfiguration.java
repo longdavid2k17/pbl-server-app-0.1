@@ -19,6 +19,7 @@ public class QueueConfiguration implements Serializable
     private String hostAddress;
     private int port;
     private String outputQueueName,inputQueueName;
+    private String localizationUrl;
 
     public QueueConfiguration()
     {
@@ -65,16 +66,16 @@ public class QueueConfiguration implements Serializable
         this.inputQueueName = inputQueueName;
     }
 
-    @Override
-    public String toString()
+    public String getLocalizationUrl()
     {
-        return "QueueConfiguration{" +
-                "hostAddress='" + hostAddress + '\'' +
-                ", port=" + port +
-                ", outputQueueName='" + outputQueueName + '\'' +
-                ", inputQueueName='" + inputQueueName + '\'' +
-                '}';
+        return localizationUrl;
     }
+
+    public void setLocalizationUrl(String localizationUrl)
+    {
+        this.localizationUrl = localizationUrl;
+    }
+
 
     @EventListener(ApplicationReadyEvent.class)
     public void loadSettings()
@@ -86,7 +87,7 @@ public class QueueConfiguration implements Serializable
             {
                 loadedSettings.add(scanner.nextLine());
             }
-            if(loadedSettings.size()!=4)
+            if(loadedSettings.size()!=5)
             {
                 throw new Exception("Loaded values are not valid!");
             }
@@ -96,6 +97,7 @@ public class QueueConfiguration implements Serializable
                 setPort(Integer.parseInt(loadedSettings.get(1)));
                 setInputQueueName(loadedSettings.get(2));
                 setOutputQueueName(loadedSettings.get(3));
+                setLocalizationUrl(loadedSettings.get(4));
                 instance = this;
             }
         }
@@ -107,6 +109,7 @@ public class QueueConfiguration implements Serializable
             setPort(5566);
             setInputQueueName("results");
             setOutputQueueName("tasks");
+            setLocalizationUrl("D:\\Dokumenty");
             createNewSettingsFile(this);
             instance = this;
         }
@@ -131,7 +134,8 @@ public class QueueConfiguration implements Serializable
                     buffer.write(queueConfiguration.getHostAddress()+"\n");
                     buffer.write(queueConfiguration.getPort()+"\n");
                     buffer.write(queueConfiguration.getInputQueueName()+"\n");
-                    buffer.write(queueConfiguration.getOutputQueueName());
+                    buffer.write(queueConfiguration.getOutputQueueName()+"\n");
+                    buffer.write(queueConfiguration.getLocalizationUrl());
                     log.info("New configuration file created!");
                 }
             }

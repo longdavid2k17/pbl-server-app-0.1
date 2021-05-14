@@ -15,6 +15,7 @@ import java.security.Principal;
 @Controller
 public class HomePanelController
 {
+    private final Logger logger = LoggerFactory.getLogger(HomePanelController.class);
     private final UserRepository userRepository;
     private final QueueConfiguration queueConfiguration;
 
@@ -44,6 +45,7 @@ public class HomePanelController
         {
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user",user);
+            logger.info(queueConfiguration.toString());
         }
         return "navbarUser";
     }

@@ -138,7 +138,7 @@
                 </div>
                 <td th:text="${result.resultStatus}">resultStatus</td>
                 <td>-</td>
-                <td><a href="file:///c:/"><span th:text="${result.resultsUrl}">resultsUrl</span></a></td>
+                <td><a th:href="${result.resultsUrl}"><span th:text="${result.resultsUrl}">resultsUrl</span></a></td>
                 <td><button class="btn btn-primary" type="button" data-toggle="collapse" th:data-target="'#podglad'+${result.id}" aria-expanded="false" aria-controls="collapseExample">
                     Podgląd</button></td>
             </tr>
