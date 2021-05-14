@@ -64,6 +64,9 @@
     </div>
 </nav>
 <div class="container">
+    <div th:if="${message}" style="color: red">
+        <h2 th:text="${message}"/>
+    </div>
     <table class="table">
         <thead class="thead-dark">
         <div th:if="${user.role=='ROLE_ADMIN'}">
@@ -87,6 +90,7 @@
                     </select>
                 </td>
                 <td><button type="submit" class="btn btn-primary">Filtruj</button></td>
+                <td><a th:href="@{/logged/results}"><button type="button" class="btn btn-primary">Wyczyść filtry</button></a></td>
             </form>
         </tr>
         </div>
@@ -104,6 +108,7 @@
                     <td><input type="date" th:field="*{endDate}"/></td>
                     <td><input type="time" th:field="*{endHour}"/></td>
                     <td><button type="submit" class="btn btn-primary">Filtruj</button></td>
+                    <td><a th:href="@{/logged/results}"><button type="button" class="btn btn-primary">Wyczyść filtry</button></a></td>
                 </form>
             </tr>
         </div>
@@ -151,6 +156,15 @@
         </div>
         </tbody>
     </table>
+    <div th:if="${user.role=='ROLE_ADMIN'}">
+        <div th:if="${!results.empty}">
+            <a th:href="@{/logged/results/delete}"><button type="button" class="btn btn-danger" title="Tej operacji nie da się cofnąć!">Usuń wszystkie rekordy</button> </a>
+        </div>
+        <div th:if="${results.empty}">
+            <a th:href="@{/logged/results/delete}"><button type="button" class="btn btn-danger" title="Tej operacji nie da się cofnąć!" disabled>Usuń wszystkie rekordy</button> </a>
+        </div>
+    </div>
+
 </div>
 </body>
 </html>

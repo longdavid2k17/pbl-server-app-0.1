@@ -29,6 +29,7 @@ public class TasksController
     private final QueueService queueService;
     private Shape selectedShapeGlobal;
     private String ownerUsername;
+    private Long ownerId;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
 
@@ -51,6 +52,7 @@ public class TasksController
             model.addAttribute("shapeList",shapeRepository.findAll());
             model.addAttribute("user",user);
             ownerUsername = principal.getName();
+            ownerId = user.getUserId();
             return "newCalculations";
         }
             return "redirect:/logged";
@@ -70,6 +72,7 @@ public class TasksController
             if(shapeId!=null && !shapeId.equals(""))
             {
                 ownerUsername = principal.getName();
+                ownerId = user.getUserId();
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
                 selectedShapeGlobal=selectedShape;
                 model.addAttribute("shapeList",shapeRepository.findAll());
@@ -98,6 +101,7 @@ public class TasksController
             if(shapeId!=null && !shapeId.equals(""))
             {
                 ownerUsername = principal.getName();
+                ownerId = user.getUserId();
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
                 selectedShapeGlobal = selectedShape;
                 logger.info("Given ID = "+ shapeId);
@@ -133,6 +137,7 @@ public class TasksController
             Date date = new Date();
             task.setShape(selectedShapeGlobal);
             task.setOwnerUsername(ownerUsername);
+            task.setOwnerId(ownerId);
             task.setCreationDate(dateFormat.format(date));
             task.setCreationHour(hourFormat.format(date));
             queueService.sendTask(task);

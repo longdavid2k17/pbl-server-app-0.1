@@ -43,6 +43,7 @@ public class QueueService
         result.setResultStatus("Rozpoczęto");
         result.setCreationDate(task.getCreationDate());
         result.setCreationHour(task.getCreationHour());
+        result.setOwnerId(task.getOwnerId());
         result.setEndingDate("-");
         result.setEndingHour("-");
         result.setOwnerUsername(task.getOwnerUsername());

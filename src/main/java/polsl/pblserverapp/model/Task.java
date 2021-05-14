@@ -17,15 +17,19 @@ public class Task
     private String creationHour;
     private Shape shape;
     private String ownerUsername;
+    private Long ownerId;
     private List<String> argsValues;
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Task{" +
                 "taskId=" + taskId +
                 ", creationDate='" + creationDate + '\'' +
+                ", creationHour='" + creationHour + '\'' +
                 ", shape=" + shape +
                 ", ownerUsername='" + ownerUsername + '\'' +
+                ", ownerId=" + ownerId +
                 ", argsValues=" + argsValues +
                 '}';
     }

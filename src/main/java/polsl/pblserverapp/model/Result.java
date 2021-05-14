@@ -22,5 +22,6 @@ public class Result
     private String resultsUrl;
     private Long shapeId;
     private String ownerUsername;
+    private Long ownerId;
     private String fullCommand;
 }
