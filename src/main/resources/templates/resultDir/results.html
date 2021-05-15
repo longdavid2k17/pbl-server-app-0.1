@@ -79,18 +79,18 @@
         </tr>
         <tr>
             <form th:object="${filter}" th:action="@{/logged/results/admin}" method="post">
-                <td><input type="date" th:field="*{startDate}"/></td>
-                <td><input type="time" th:field="*{startHour}" /></td>
-                <td><input type="date" th:field="*{endDate}"/></td>
-                <td><input type="time" th:field="*{endHour}"/></td>
+                <td><input type="date" th:field="*{startDate}" class="form-control"/></td>
+                <td><input type="time" th:field="*{startHour}" class="form-control"/></td>
+                <td><input type="date" th:field="*{endDate}" class="form-control"/></td>
+                <td><input type="time" th:field="*{endHour}" class="form-control"/></td>
                 <td>
-                    <select id="userId" name="userId">
+                    <select id="userId" name="userId" class="form-control">
                         <option name="userId" value=""> Wybierz użytkownika </option>
                         <option name="userId" th:each="user : ${users}" th:value="${user.userId}" th:text="${user.username}" th:field="*{userId}">user</option>
                     </select>
                 </td>
-                <td><button type="submit" class="btn btn-primary">Filtruj</button></td>
-                <td><a th:href="@{/logged/results}"><button type="button" class="btn btn-primary">Wyczyść filtry</button></a></td>
+                <td><button type="submit" class="btn btn-success">Filtruj</button></td>
+                <td><a th:href="@{/logged/results}"><button type="button" class="btn btn-danger">Wyczyść filtry</button></a></td>
             </form>
         </tr>
         </div>
