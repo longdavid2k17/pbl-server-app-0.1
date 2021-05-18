@@ -7,9 +7,17 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import polsl.pblserverapp.dao.ResultRepository;
+import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.QueueConfiguration;
 import polsl.pblserverapp.model.Result;
 import polsl.pblserverapp.model.Task;
+import polsl.pblserverapp.model.User;
+
+import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QueueService
@@ -17,13 +25,16 @@ public class QueueService
     private final Logger logger = LoggerFactory.getLogger(QueueService.class);
     private final QueueConfiguration configuration;
     private final ResultRepository resultsRepository;
+    private final UserRepository userRepository;
     private final RabbitTemplate rabbitTemplate;
-    private String globalMessage;
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+    private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
 
-    public QueueService(QueueConfiguration configuration, ResultRepository resultsRepository)
+    public QueueService(QueueConfiguration configuration, ResultRepository resultsRepository,UserRepository userRepository)
     {
         this.configuration = configuration;
         this.resultsRepository = resultsRepository;
+        this.userRepository = userRepository;
         CachingConnectionFactory factory = new CachingConnectionFactory(configuration.getHostAddress());
         this.rabbitTemplate = new RabbitTemplate(factory);
     }
@@ -51,25 +62,91 @@ public class QueueService
         result.setFullCommand(buildedTask.toString());
         result.setResultsUrl(configuration.getLocalizationUrl());
         Result savedResult = resultsRepository.save(result);
-        rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), "Id"+savedResult.getId()+" "+ buildedTask);
+        savedResult.setFullCommand("'"+configuration.getLocalizationUrl()+"' ID"+savedResult.getId()+" "+ buildedTask);
+        Result savedFullResult = resultsRepository.save(savedResult);
+        rabbitTemplate.convertAndSend(configuration.getOutputQueueName(),savedFullResult.getFullCommand() );
+    }
+
+    public void sendTaskList(List<String> tasks, Long ownerId)
+    {
+        if(!tasks.isEmpty())
+        {
+            User user = userRepository.findByUserId(ownerId);
+            Date date = new Date();
+            for(int i=0;i< tasks.size();i++)
+            {
+                Result result = new Result();
+                result.setResultStatus("Rozpoczęto");
+                result.setCreationDate(dateFormat.format(date));
+                result.setCreationHour(hourFormat.format(date));
+                result.setOwnerId(ownerId);
+                result.setEndingDate("-");
+                result.setEndingHour("-");
+                result.setOwnerUsername(user.getUsername());
+                //result.setShapeId(task.getShape().getShapeId());
+                result.setFullCommand(tasks.get(i));
+                result.setResultsUrl(configuration.getLocalizationUrl());
+                Result savedResult = resultsRepository.save(result);
+                savedResult.setFullCommand("'"+configuration.getLocalizationUrl()+"' ID"+savedResult.getId()+" "+ tasks.get(i));
+                Result savedFullResult = resultsRepository.save(savedResult);
+                rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), savedFullResult.getFullCommand());
+            }
+        }
     }
 
 
     @Scheduled(fixedRate = 1000)
-    public boolean areAnyMessages()
+    public void areAnyMessages()
     {
-        Object message = rabbitTemplate.receiveAndConvert(configuration.getOutputQueueName());
-        if(message==null)
+        Object message = rabbitTemplate.receiveAndConvert(configuration.getInputQueueName());
+
+        if(message!=null)
         {
-            return false;
+            String globalMessage = message.toString();
+            Optional<Result> optionalResult = checkResult(globalMessage);
+            if(optionalResult.isPresent())
+            {
+                Result result = optionalResult.get();
+                resultsRepository.save(result);
+            }
+            else
+            {
+                logger.error("Metoda areAnyMessages() - Nie ma takiego rekordu!");
+            }
         }
-        else
-            globalMessage = message.toString();
-            return true;
     }
 
-    public String getGlobalMessage()
+    public Optional<Result> checkResult(String message)
     {
-        return globalMessage;
+        List<Result> actualResults = resultsRepository.findAll();
+        logger.info(message);
+        logger.info("message length = "+message.length());
+        for(Result result : actualResults)
+        {
+            logger.info("============================");
+            logger.info(result.getFullCommand());
+            logger.info("Message.startsWith: "+message.startsWith(result.getFullCommand()));
+            logger.info("result command.lenght: "+ result.getFullCommand().length());
+            String trimmedMessage = message.replaceAll("\\s+","");
+            String trimmedCommand = result.getFullCommand().replaceAll("\\s+","");
+            logger.info(trimmedMessage);
+            logger.info(trimmedCommand);
+            //if(message.trim().startsWith(result.getFullCommand().trim()) && message.length()>=result.getFullCommand().length())
+            if(trimmedMessage.startsWith(trimmedCommand) && trimmedMessage.length()>=trimmedCommand.length())
+            {
+                String status = trimmedMessage.substring(trimmedCommand.length());
+                result.setResultStatus(status);
+                if(status.equals("Zakończono"))
+                {
+                    Date date = new Date();
+                    result.setEndingDate(dateFormat.format(date));
+                    result.setEndingHour(hourFormat.format(date));
+                }
+                return Optional.of(result);
+            }
+        }
+        logger.info("============================");
+        logger.error("Metoda checkResult() - Nie ma takiego rekordu!");
+        return Optional.empty();
     }
 }

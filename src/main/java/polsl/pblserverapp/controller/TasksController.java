@@ -4,16 +4,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import polsl.pblserverapp.dao.ShapeRepository;
 import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.Shape;
 import polsl.pblserverapp.model.Task;
 import polsl.pblserverapp.model.User;
+import polsl.pblserverapp.services.FileLoaderService;
 import polsl.pblserverapp.services.QueueService;
+import polsl.pblserverapp.utils.ApacheXlsxUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
@@ -27,6 +27,7 @@ public class TasksController
     private final UserRepository userRepository;
     private final ShapeRepository shapeRepository;
     private final QueueService queueService;
+    private final FileLoaderService fileLoaderService;
     private Shape selectedShapeGlobal;
     private String ownerUsername;
     private Long ownerId;
@@ -34,11 +35,12 @@ public class TasksController
     private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
 
 
-    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService)
+    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService, FileLoaderService fileLoaderService)
     {
         this.userRepository = userRepository;
         this.shapeRepository = shapeRepository;
         this.queueService = queueService;
+        this.fileLoaderService = fileLoaderService;
         selectedShapeGlobal = null;
     }
 
@@ -142,6 +144,44 @@ public class TasksController
             task.setCreationHour(hourFormat.format(date));
             queueService.sendTask(task);
             return "redirect:/logged/results";
+        }
+    }
+
+    @PostMapping("/logged/tasks/upload")
+    public String uploadXlsx(@RequestParam("xlsxFile") MultipartFile xlsxFile, Model model, HttpServletRequest request )
+    {
+        Principal principal = request.getUserPrincipal();
+        if(principal!=null)
+        {
+            User user = userRepository.findByUsername(principal.getName());
+            model.addAttribute("user",user);
+
+            if (xlsxFile.getOriginalFilename().isEmpty())
+            {
+                model.addAttribute("message", "Wystąpił problem z załadowaniem pliku. Spróbuj ponownie!");
+                return "redirect:/logged/tasks/choose";
+            }
+            if(!ApacheXlsxUtil.isExcelFile(xlsxFile))
+            {
+                logger.error("Plik nie jest plikiem z rozszerzeniem .XLS lub XLSX");
+                model.addAttribute("message", "Plik nie jest plikiem z rozszerzeniem .XLS lub XLSX");
+                return "redirect:/logged/tasks/choose";
+            }
+            try
+            {
+                fileLoaderService.storeExcelFile(xlsxFile.getInputStream(), ownerId);
+                logger.info("File "+ xlsxFile.getOriginalFilename()+" loaded successfully!");
+                model.addAttribute("message", "Pomyślnie załadowano plik!");
+            }
+            catch (Exception e)
+            {
+                logger.error(e.getMessage());
+            }
+            return "redirect:/logged/results";
+        }
+        else
+        {
+            return "redirect:/logged";
         }
     }
 }

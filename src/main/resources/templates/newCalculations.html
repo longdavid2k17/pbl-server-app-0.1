@@ -123,9 +123,9 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" th:action="@{/logged/shapes/upload}" enctype="multipart/form-data">
-                    <label for="csvfile">Plik</label>
-                    <input type="file" id="csvfile" name="csvfile" accept=".csv" required/>
+                <form method="post" th:action="@{/logged/tasks/upload}" enctype="multipart/form-data">
+                    <label for="xlsxFile">Plik</label>
+                    <input type="file" id="xlsxFile" name="xlsxFile" accept=".xlsx, .xls" required/>
                     <hr/>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Zamknij

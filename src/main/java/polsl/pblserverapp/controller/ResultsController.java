@@ -60,10 +60,7 @@ public class ResultsController
                 model.addAttribute("message",message);
             }
 
-            if(queueService.areAnyMessages())
-            {
-                logger.info(queueService.getGlobalMessage());
-            }
+            queueService.areAnyMessages();
             return "resultDir/results";
         }
         else
@@ -89,10 +86,8 @@ public class ResultsController
             model.addAttribute("filter",new Filter());
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
 
-            if(queueService.areAnyMessages())
-            {
-                logger.info(queueService.getGlobalMessage());
-            }
+            queueService.areAnyMessages();
+
             return "resultDir/results";
         }
         else
@@ -119,10 +114,7 @@ public class ResultsController
             model.addAttribute("filter",new Filter());
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
 
-            if(queueService.areAnyMessages())
-            {
-                logger.info(queueService.getGlobalMessage());
-            }
+            queueService.areAnyMessages();
             return "resultDir/results";
         }
         else
@@ -306,25 +298,27 @@ public class ResultsController
         for(Result result : filteredResults)
         {
             if(!result.getEndingDate().equals("-"))
-            logger.info("START DAY FILTER VAL: "+endDate);
-            String[] monthYear = endDate.split("-");
-            Calendar cal1 = Calendar.getInstance();
-            cal1.set(Calendar.YEAR, Integer.parseInt(monthYear[0]));
-            cal1.set(Calendar.MONTH, Integer.parseInt(monthYear[1]));
-            cal1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(monthYear[2]));
-            logger.info(cal1.get(Calendar.DAY_OF_MONTH) +"-"+ cal1.get(Calendar.MONTH) +"-"+ cal1.get(Calendar.YEAR));
-
-            logger.info("START DAY RECORD VAL: "+result.getEndingDate());
-            String[] dayResult = result.getCreationDate().split("-");
-            Calendar cal2 = Calendar.getInstance();
-            cal2.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dayResult[0]));
-            cal2.set(Calendar.MONTH, Integer.parseInt(dayResult[1]));
-            cal2.set(Calendar.YEAR, Integer.parseInt(dayResult[2]));
-            logger.info(cal2.get(Calendar.DAY_OF_MONTH) +"-"+ cal2.get(Calendar.MONTH) +"-"+ cal2.get(Calendar.YEAR));
-
-            if (cal1.after(cal2) || cal1.equals(cal2))
             {
-                startDayFilteredResults.add(result);
+                logger.info("START DAY FILTER VAL: "+endDate);
+                String[] monthYear = endDate.split("-");
+                Calendar cal1 = Calendar.getInstance();
+                cal1.set(Calendar.YEAR, Integer.parseInt(monthYear[0]));
+                cal1.set(Calendar.MONTH, Integer.parseInt(monthYear[1]));
+                cal1.set(Calendar.DAY_OF_MONTH, Integer.parseInt(monthYear[2]));
+                logger.info(cal1.get(Calendar.DAY_OF_MONTH) +"-"+ cal1.get(Calendar.MONTH) +"-"+ cal1.get(Calendar.YEAR));
+
+                logger.info("START DAY RECORD VAL: "+result.getEndingDate());
+                String[] dayResult = result.getCreationDate().split("-");
+                Calendar cal2 = Calendar.getInstance();
+                cal2.set(Calendar.DAY_OF_MONTH, Integer.parseInt(dayResult[0]));
+                cal2.set(Calendar.MONTH, Integer.parseInt(dayResult[1]));
+                cal2.set(Calendar.YEAR, Integer.parseInt(dayResult[2]));
+                logger.info(cal2.get(Calendar.DAY_OF_MONTH) +"-"+ cal2.get(Calendar.MONTH) +"-"+ cal2.get(Calendar.YEAR));
+
+                if (cal1.after(cal2) || cal1.equals(cal2))
+                {
+                    startDayFilteredResults.add(result);
+                }
             }
         }
         return startDayFilteredResults;

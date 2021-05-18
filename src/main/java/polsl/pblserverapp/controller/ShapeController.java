@@ -243,7 +243,7 @@ public class ShapeController
             }
             try
             {
-                fileLoaderService.store(csvfile.getInputStream());
+                fileLoaderService.storeCSV(csvfile.getInputStream());
                 log.info("File "+csvfile.getName()+" loaded successfully!");
                 model.addAttribute("message", "Pomyślnie załadowano plik!");
             }
