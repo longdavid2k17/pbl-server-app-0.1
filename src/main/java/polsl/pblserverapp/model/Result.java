@@ -20,6 +20,7 @@ public class Result
     private String endingHour;
     private String resultStatus;
     private String resultsUrl;
+    private String errorCode;
     private Long shapeId;
     private String ownerUsername;
     private Long ownerId;

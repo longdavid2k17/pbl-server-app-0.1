@@ -137,7 +137,12 @@
                     <td><span th:text="${result.endingDate}"></span> <span th:text="${result.endingHour}"></span></td>
                 </div>
                 <td th:text="${result.resultStatus}">resultStatus</td>
-                <td>-</td>
+                <div th:if="${result.errorCode==null}">
+                    <td>-</td>
+                </div>
+                <div th:if="${result.errorCode!=null}">
+                    <td><b><span th:text="${result.errorCode}" style="color: red">resultStatus</span></b></td>
+                </div>
                 <td><a th:href="${result.resultsUrl}"><span th:text="${result.resultsUrl}">resultsUrl</span></a></td>
                 <td><button class="btn btn-primary" type="button" data-toggle="collapse" th:data-target="'#podglad'+${result.id}" aria-expanded="false" aria-controls="collapseExample">
                     Podgląd</button></td>

@@ -13,6 +13,7 @@ import polsl.pblserverapp.model.Result;
 import polsl.pblserverapp.model.Task;
 import polsl.pblserverapp.model.User;
 
+import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -51,7 +52,7 @@ public class QueueService
         }
 
         Result result = new Result();
-        result.setResultStatus("Rozpoczęto");
+        result.setResultStatus("Nowe zadanie");
         result.setCreationDate(task.getCreationDate());
         result.setCreationHour(task.getCreationHour());
         result.setOwnerId(task.getOwnerId());
@@ -76,7 +77,7 @@ public class QueueService
             for(int i=0;i< tasks.size();i++)
             {
                 Result result = new Result();
-                result.setResultStatus("Rozpoczęto");
+                result.setResultStatus("Nowe zadanie");
                 result.setCreationDate(dateFormat.format(date));
                 result.setCreationHour(hourFormat.format(date));
                 result.setOwnerId(ownerId);
@@ -99,19 +100,31 @@ public class QueueService
     public void areAnyMessages()
     {
         Object message = rabbitTemplate.receiveAndConvert(configuration.getInputQueueName());
-
         if(message!=null)
         {
-            String globalMessage = message.toString();
-            Optional<Result> optionalResult = checkResult(globalMessage);
-            if(optionalResult.isPresent())
+            String mess = null;
+            try
             {
-                Result result = optionalResult.get();
-                resultsRepository.save(result);
+                mess= new String((byte[]) message, "UTF-8");
+                logger.info("Odebrano"+mess);
             }
-            else
+            catch (UnsupportedEncodingException e)
             {
-                logger.error("Metoda areAnyMessages() - Nie ma takiego rekordu!");
+                logger.error(e.getMessage());
+            }
+            if(mess!=null)
+            {
+                String globalMessage = mess;
+                Optional<Result> optionalResult = checkResult(globalMessage);
+                if(optionalResult.isPresent())
+                {
+                    Result result = optionalResult.get();
+                    resultsRepository.save(result);
+                }
+                else
+                {
+                    logger.error("Metoda areAnyMessages() - Nie ma takiego rekordu!");
+                }
             }
         }
     }
@@ -125,8 +138,6 @@ public class QueueService
         {
             logger.info("============================");
             logger.info(result.getFullCommand());
-            logger.info("Message.startsWith: "+message.startsWith(result.getFullCommand()));
-            logger.info("result command.lenght: "+ result.getFullCommand().length());
             String trimmedMessage = message.replaceAll("\\s+","");
             String trimmedCommand = result.getFullCommand().replaceAll("\\s+","");
             logger.info(trimmedMessage);
@@ -135,12 +146,29 @@ public class QueueService
             if(trimmedMessage.startsWith(trimmedCommand) && trimmedMessage.length()>=trimmedCommand.length())
             {
                 String status = trimmedMessage.substring(trimmedCommand.length());
-                result.setResultStatus(status);
-                if(status.equals("Zakończono"))
+                if(status.equals("zakonczono"))
                 {
                     Date date = new Date();
                     result.setEndingDate(dateFormat.format(date));
                     result.setEndingHour(hourFormat.format(date));
+                    result.setResultStatus("Zakończono sukcesem");
+                }
+                else if(status.equals("rozpoczeto"))
+                {
+                    result.setResultStatus("Rozpoczęto obliczanie");
+                }
+                else if(status.equals("pobrano"))
+                {
+                    result.setResultStatus("Pobrano");
+                }
+                else if(status.startsWith("niepowodzenie"))
+                {
+                    String errorCode = status.substring("niepowodzenie/".length());
+                    result.setResultStatus("Zakończono niepowodzeniem");
+                    Date date = new Date();
+                    result.setEndingDate(dateFormat.format(date));
+                    result.setEndingHour(hourFormat.format(date));
+                    result.setErrorCode(errorCode);
                 }
                 return Optional.of(result);
             }
