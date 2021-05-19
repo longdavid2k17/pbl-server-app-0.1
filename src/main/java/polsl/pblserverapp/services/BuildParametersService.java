@@ -9,7 +9,7 @@ import polsl.pblserverapp.model.SwitchParameter;
 @Service
 public class BuildParametersService
 {
-    private SwitchParameterRepository parameterRepository;
+    private final SwitchParameterRepository parameterRepository;
 
     public BuildParametersService(SwitchParameterRepository parameterRepository)
     {

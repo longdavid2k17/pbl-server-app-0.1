@@ -14,7 +14,7 @@ import polsl.pblserverapp.services.UserDetailsServiceImplementation;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter
 {
-    private LoggingAccessDeniedHandler accessDeniedHandler;
+    private final LoggingAccessDeniedHandler accessDeniedHandler;
 
     public SecurityConfiguration(LoggingAccessDeniedHandler loggingAccessDeniedHandler)
     {

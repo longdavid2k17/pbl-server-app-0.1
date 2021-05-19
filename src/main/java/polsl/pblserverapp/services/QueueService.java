@@ -13,8 +13,7 @@ import polsl.pblserverapp.model.Result;
 import polsl.pblserverapp.model.Task;
 import polsl.pblserverapp.model.User;
 
-import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -46,7 +45,6 @@ public class QueueService
         StringBuilder buildedTask = new StringBuilder(task.getShape().getCommand() + " ");
         for(int i=0;i<task.getShape().getParametersList().size();i++)
         {
-            //String pair = task.getShape().getParametersList().get(i).getSwitchParam()+":"+task.getArgsValues().get(i)+" ";
             String pair = task.getShape().getParametersList().get(i).getSwitchParam()+task.getArgsValues().get(i)+" ";
             buildedTask.append(pair);
         }
@@ -74,8 +72,7 @@ public class QueueService
         {
             User user = userRepository.findByUserId(ownerId);
             Date date = new Date();
-            for(int i=0;i< tasks.size();i++)
-            {
+            for (String task : tasks) {
                 Result result = new Result();
                 result.setResultStatus("Nowe zadanie");
                 result.setCreationDate(dateFormat.format(date));
@@ -84,11 +81,10 @@ public class QueueService
                 result.setEndingDate("-");
                 result.setEndingHour("-");
                 result.setOwnerUsername(user.getUsername());
-                //result.setShapeId(task.getShape().getShapeId());
-                result.setFullCommand(tasks.get(i));
+                result.setFullCommand(task);
                 result.setResultsUrl(configuration.getLocalizationUrl());
                 Result savedResult = resultsRepository.save(result);
-                savedResult.setFullCommand("'"+configuration.getLocalizationUrl()+"' ID"+savedResult.getId()+" "+ tasks.get(i));
+                savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
                 Result savedFullResult = resultsRepository.save(savedResult);
                 rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), savedFullResult.getFullCommand());
             }
@@ -103,19 +99,10 @@ public class QueueService
         if(message!=null)
         {
             String mess = null;
-            try
-            {
-                mess= new String((byte[]) message, "UTF-8");
-                logger.info("Odebrano"+mess);
-            }
-            catch (UnsupportedEncodingException e)
-            {
-                logger.error(e.getMessage());
-            }
+            mess= new String((byte[]) message, StandardCharsets.UTF_8);
             if(mess!=null)
             {
-                String globalMessage = mess;
-                Optional<Result> optionalResult = checkResult(globalMessage);
+                Optional<Result> optionalResult = checkResult(mess);
                 if(optionalResult.isPresent())
                 {
                     Result result = optionalResult.get();
@@ -132,17 +119,10 @@ public class QueueService
     public Optional<Result> checkResult(String message)
     {
         List<Result> actualResults = resultsRepository.findAll();
-        logger.info(message);
-        logger.info("message length = "+message.length());
         for(Result result : actualResults)
         {
-            logger.info("============================");
-            logger.info(result.getFullCommand());
             String trimmedMessage = message.replaceAll("\\s+","");
             String trimmedCommand = result.getFullCommand().replaceAll("\\s+","");
-            logger.info(trimmedMessage);
-            logger.info(trimmedCommand);
-            //if(message.trim().startsWith(result.getFullCommand().trim()) && message.length()>=result.getFullCommand().length())
             if(trimmedMessage.startsWith(trimmedCommand) && trimmedMessage.length()>=trimmedCommand.length())
             {
                 String status = trimmedMessage.substring(trimmedCommand.length());
@@ -173,8 +153,6 @@ public class QueueService
                 return Optional.of(result);
             }
         }
-        logger.info("============================");
-        logger.error("Metoda checkResult() - Nie ma takiego rekordu!");
         return Optional.empty();
     }
 }

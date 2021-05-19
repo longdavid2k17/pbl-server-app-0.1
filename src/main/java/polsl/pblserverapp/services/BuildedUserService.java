@@ -10,8 +10,8 @@ import polsl.pblserverapp.model.User;
 @Service
 public class BuildedUserService
 {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public BuildedUserService(UserRepository userRepository, PasswordEncoder passwordEncoder)
     {

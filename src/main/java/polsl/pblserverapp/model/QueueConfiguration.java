@@ -82,7 +82,7 @@ public class QueueConfiguration implements Serializable
     {
         try(Scanner scanner = new Scanner(new File("settings.txt")))
         {
-            List<String> loadedSettings = new ArrayList();
+            List<String> loadedSettings = new ArrayList<>();
             while (scanner.hasNext())
             {
                 loadedSettings.add(scanner.nextLine());
@@ -148,10 +148,5 @@ public class QueueConfiguration implements Serializable
         {
             log.error(e.getMessage());
         }
-    }
-
-    public QueueConfiguration getInstance()
-    {
-        return instance;
     }
 }

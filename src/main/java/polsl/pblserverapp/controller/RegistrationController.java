@@ -42,7 +42,7 @@ public class RegistrationController
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 user.setRole("ROLE_USER");
                 user.setEnabled(false);
-                log.info("Proceed: "+user.toString());
+                log.info("Proceed: "+ user);
                 userRepository.save(user);
                 model.addAttribute("message","Pomyślnie utworzono konto!");
                 return "redirect:/signin";

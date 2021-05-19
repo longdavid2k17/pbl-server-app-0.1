@@ -71,11 +71,11 @@ public class TasksController
         else
         {
             User user = userRepository.findByUsername(principal.getName());
-            if(shapeId!=null && !shapeId.equals(""))
+            if(shapeId != null)
             {
                 ownerUsername = principal.getName();
                 ownerId = user.getUserId();
-                Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
+                Shape selectedShape = shapeRepository.findByShapeId(shapeId);
                 selectedShapeGlobal=selectedShape;
                 model.addAttribute("shapeList",shapeRepository.findAll());
                 model.addAttribute("user",user);
@@ -156,6 +156,7 @@ public class TasksController
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user",user);
 
+            //if (Objects.requireNonNull(xlsxFile.getOriginalFilename()).isEmpty())
             if (xlsxFile.getOriginalFilename().isEmpty())
             {
                 model.addAttribute("message", "Wystąpił problem z załadowaniem pliku. Spróbuj ponownie!");
