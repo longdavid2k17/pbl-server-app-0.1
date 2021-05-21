@@ -123,6 +123,7 @@ public class ApacheCommonsCsvUtil
                 shape.setParametersList(switchParameters);
                 shapeList.add(shape);
             }
+            else continue;
         }
         return shapeList;
     }

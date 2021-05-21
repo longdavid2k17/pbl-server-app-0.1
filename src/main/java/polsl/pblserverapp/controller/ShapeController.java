@@ -71,6 +71,8 @@ public class ShapeController
             if(errors.hasErrors())
             {
                 model.addAttribute("user",user);
+                //TODO znaleźć prawidłowy błąd do przekazania w message
+                //model.addAttribute("message",errors.getGlobalError());
                 model.addAttribute("message","Nie wybrano żadnego parametru!");
                 model.addAttribute("switchesList",switchParameterRepository.findAll());
                 return "shape/addShape";
@@ -97,7 +99,7 @@ public class ShapeController
     }
 
     @GetMapping("/logged/shapes")
-    public String completeShapes(Model model, HttpServletRequest request)
+    public String completeShapes(Model model, HttpServletRequest request, HttpServletResponse response)
     {
         Principal principal = request.getUserPrincipal();
         User user = userRepository.findByUsername(principal.getName());
@@ -110,13 +112,13 @@ public class ShapeController
             List<Shape> shapeList = shapeRepository.findAll();
             model.addAttribute("user",user);
             model.addAttribute("shapeList",shapeList);
-            return "/shape/chooseSet";
+            return "shape/chooseSet";
         }
     }
 
     @Transactional
     @GetMapping("/logged/shapes/delete/{shapeid}")
-    public String deleteShape(@PathVariable Long shapeid, HttpServletRequest request, RedirectAttributes ra)
+    public String deleteShape(@PathVariable Long shapeid, Model model, HttpServletRequest request, RedirectAttributes ra)
     {
         Principal principal = request.getUserPrincipal();
         User user = userRepository.findByUsername(principal.getName());
@@ -232,12 +234,12 @@ public class ShapeController
             if (csvfile.getOriginalFilename().isEmpty())
             {
                 model.addAttribute("message", "Wystąpił problem z załadowaniem pliku. Spróbuj ponownie!");
-                return "/shape/chooseSet";
+                return "shape/chooseSet";
             }
             if(!ApacheCommonsCsvUtil.isCSVFile(csvfile))
             {
                 model.addAttribute("message", "Plik nie jest plikiem z rozszerzeniem .CSV");
-                return "/shape/chooseSet";
+                return "shape/chooseSet";
             }
             try
             {
@@ -247,11 +249,11 @@ public class ShapeController
             }
             catch (Exception e)
             {
-                log.error(e.getMessage());
+                log.error("Błąd podczas przekazywania pliku: "+e.getMessage());
             }
             List<Shape> shapeList = shapeRepository.findAll();
             model.addAttribute("shapeList",shapeList);
-            return "/shape/chooseSet";
+            return "shape/chooseSet";
         }
         else
         {

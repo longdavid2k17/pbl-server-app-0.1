@@ -19,9 +19,21 @@ public class BuildParametersService
     @EventListener(ApplicationReadyEvent.class)
     public void insertParameters()
     {
-        parameterRepository.save(new SwitchParameter("/a"));
-        parameterRepository.save(new SwitchParameter("/b"));
-        parameterRepository.save(new SwitchParameter("/c"));
-        parameterRepository.save(new SwitchParameter("/d"));
+        if(!parameterRepository.existsBySwitchParam("/a"))
+        {
+            parameterRepository.save(new SwitchParameter("/a"));
+        }
+        if(!parameterRepository.existsBySwitchParam("/b"))
+        {
+            parameterRepository.save(new SwitchParameter("/b"));
+        }
+        if(!parameterRepository.existsBySwitchParam("/c"))
+        {
+            parameterRepository.save(new SwitchParameter("/c"));
+        }
+        if(!parameterRepository.existsBySwitchParam("/d"))
+        {
+            parameterRepository.save(new SwitchParameter("/d"));
+        }
     }
 }

@@ -44,7 +44,7 @@
                         <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
                     </div>
                     <div th:if="${user.role!='ROLE_ADMIN'}">
-                        <a class="dropdown-item" th:href="@{/logged/shapes}">Istniejące zestawy</a>
+                        <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
                         <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
                     </div>
                 </div>
@@ -66,6 +66,9 @@
 <div class="container">
     <div th:if="${message}" style="color: red">
         <h2 th:text="${message}"/>
+    </div>
+    <div th:if="${errorCode}" style="color: red">
+        <h2 th:text="${errorCode}"/>
     </div>
     <table class="table">
         <thead class="thead-dark">

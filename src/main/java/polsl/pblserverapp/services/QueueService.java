@@ -3,6 +3,7 @@ package polsl.pblserverapp.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -29,91 +30,127 @@ public class QueueService
     private final RabbitTemplate rabbitTemplate;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
+    private Connection connection = null;
+    private final CachingConnectionFactory factory;
 
     public QueueService(QueueConfiguration configuration, ResultRepository resultsRepository,UserRepository userRepository)
     {
         this.configuration = configuration;
         this.resultsRepository = resultsRepository;
         this.userRepository = userRepository;
-        CachingConnectionFactory factory = new CachingConnectionFactory(configuration.getHostAddress());
+        factory = new CachingConnectionFactory(configuration.getHostAddress());
         this.rabbitTemplate = new RabbitTemplate(factory);
     }
 
-    public void sendTask(Task task)
+    public void sendTask(Task task) throws Exception
     {
-        logger.info("Using RabbitConfiguration: "+configuration.toString());
-        StringBuilder buildedTask = new StringBuilder(task.getShape().getCommand() + " ");
-        for(int i=0;i<task.getShape().getParametersList().size();i++)
+        connection = factory.createConnection();
+        if(connection!=null)
         {
-            String pair = task.getShape().getParametersList().get(i).getSwitchParam()+task.getArgsValues().get(i)+" ";
-            buildedTask.append(pair);
-        }
+            try
+            {
+                logger.info("Using RabbitConfiguration: "+configuration.toString());
+                StringBuilder buildedTask = new StringBuilder(task.getShape().getCommand() + " ");
+                for(int i=0;i<task.getShape().getParametersList().size();i++)
+                {
+                    String pair = task.getShape().getParametersList().get(i).getSwitchParam()+task.getArgsValues().get(i)+" ";
+                    buildedTask.append(pair);
+                }
 
-        Result result = new Result();
-        result.setResultStatus("Nowe zadanie");
-        result.setCreationDate(task.getCreationDate());
-        result.setCreationHour(task.getCreationHour());
-        result.setOwnerId(task.getOwnerId());
-        result.setEndingDate("-");
-        result.setEndingHour("-");
-        result.setOwnerUsername(task.getOwnerUsername());
-        result.setShapeId(task.getShape().getShapeId());
-        result.setFullCommand(buildedTask.toString());
-        result.setResultsUrl(configuration.getLocalizationUrl());
-        Result savedResult = resultsRepository.save(result);
-        savedResult.setFullCommand("'"+configuration.getLocalizationUrl()+"' ID"+savedResult.getId()+" "+ buildedTask);
-        Result savedFullResult = resultsRepository.save(savedResult);
-        rabbitTemplate.convertAndSend(configuration.getOutputQueueName(),savedFullResult.getFullCommand() );
+                Result result = new Result();
+                result.setResultStatus("Nowe zadanie");
+                result.setCreationDate(task.getCreationDate());
+                result.setCreationHour(task.getCreationHour());
+                result.setOwnerId(task.getOwnerId());
+                result.setEndingDate("-");
+                result.setEndingHour("-");
+                result.setOwnerUsername(task.getOwnerUsername());
+                result.setShapeId(task.getShape().getShapeId());
+                result.setFullCommand(buildedTask.toString());
+                result.setResultsUrl(configuration.getLocalizationUrl());
+                Result savedResult = resultsRepository.save(result);
+                savedResult.setFullCommand("'"+configuration.getLocalizationUrl()+"' ID"+savedResult.getId()+" "+ buildedTask);
+                Result savedFullResult = resultsRepository.save(savedResult);
+                rabbitTemplate.convertAndSend(configuration.getOutputQueueName(),savedFullResult.getFullCommand() );
+            }
+            catch (Exception e)
+            {
+                logger.error("Error while connection! Code: "+e.getMessage());
+                throw new Exception("Error while connection!\nCheck your RabbitMQ server\nYours tasks will not be sended!\nCode: "+e.getMessage());
+            }
+        }
     }
 
-    public void sendTaskList(List<String> tasks, Long ownerId)
+    public void sendTaskList(List<String> tasks, Long ownerId) throws Exception
     {
         if(!tasks.isEmpty())
         {
-            User user = userRepository.findByUserId(ownerId);
-            Date date = new Date();
-            for (String task : tasks) {
-                Result result = new Result();
-                result.setResultStatus("Nowe zadanie");
-                result.setCreationDate(dateFormat.format(date));
-                result.setCreationHour(hourFormat.format(date));
-                result.setOwnerId(ownerId);
-                result.setEndingDate("-");
-                result.setEndingHour("-");
-                result.setOwnerUsername(user.getUsername());
-                result.setFullCommand(task);
-                result.setResultsUrl(configuration.getLocalizationUrl());
-                Result savedResult = resultsRepository.save(result);
-                savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
-                Result savedFullResult = resultsRepository.save(savedResult);
-                rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), savedFullResult.getFullCommand());
+            connection = factory.createConnection();
+            if(connection!=null)
+            {
+                try
+                {
+                    User user = userRepository.findByUserId(ownerId);
+                    Date date = new Date();
+                    for (String task : tasks)
+                    {
+                        Result result = new Result();
+                        result.setResultStatus("Nowe zadanie");
+                        result.setCreationDate(dateFormat.format(date));
+                        result.setCreationHour(hourFormat.format(date));
+                        result.setOwnerId(ownerId);
+                        result.setEndingDate("-");
+                        result.setEndingHour("-");
+                        result.setOwnerUsername(user.getUsername());
+                        result.setFullCommand(task);
+                        result.setResultsUrl(configuration.getLocalizationUrl());
+                        Result savedResult = resultsRepository.save(result);
+                        savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
+                        Result savedFullResult = resultsRepository.save(savedResult);
+                        rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), savedFullResult.getFullCommand());
+                    }
+                }
+                catch (Exception e)
+                {
+                    logger.error("Error while connection! Code: "+e.getMessage());
+                    throw new Exception("Error while connection!\nCheck your RabbitMQ server\nYours tasks will not be sended!\nCode: "+e.getMessage());
+                }
             }
         }
     }
 
 
     @Scheduled(fixedRate = 1000)
-    public void areAnyMessages()
+    public void areAnyMessages() throws Exception
     {
-        Object message = rabbitTemplate.receiveAndConvert(configuration.getInputQueueName());
-        if(message!=null)
+        try
         {
-            String mess = null;
-            mess= new String((byte[]) message, StandardCharsets.UTF_8);
-            if(mess!=null)
+            Object message = rabbitTemplate.receiveAndConvert(configuration.getInputQueueName());
+            if(message!=null)
             {
-                Optional<Result> optionalResult = checkResult(mess);
-                if(optionalResult.isPresent())
+                String mess = null;
+                mess= new String((byte[]) message, StandardCharsets.UTF_8);
+                if(mess!=null)
                 {
-                    Result result = optionalResult.get();
-                    resultsRepository.save(result);
-                }
-                else
-                {
-                    logger.error("Metoda areAnyMessages() - Nie ma takiego rekordu!");
+                    Optional<Result> optionalResult = checkResult(mess);
+                    if(optionalResult.isPresent())
+                    {
+                        Result result = optionalResult.get();
+                        resultsRepository.save(result);
+                    }
+                    else
+                    {
+                        logger.error("Metoda areAnyMessages() - Nie ma takiego rekordu!");
+                    }
                 }
             }
         }
+        catch (Exception e)
+        {
+            logger.error("Error while connection! Code: "+e.getMessage());
+            throw new Exception("Error while connection!\nCheck your RabbitMQ server!\n Code: "+e.getMessage());
+        }
+
     }
 
     public Optional<Result> checkResult(String message)

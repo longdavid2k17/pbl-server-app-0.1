@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import polsl.pblserverapp.dao.ShapeRepository;
 import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.Shape;
@@ -121,7 +122,7 @@ public class TasksController
     }
 
     @PostMapping("/logged/tasks/send")
-    public String sendTaskForm(Task task)
+    public String sendTaskForm(Task task, RedirectAttributes ra)
     {
         logger.info(task.toString());
         if(selectedShapeGlobal==null)
@@ -142,13 +143,21 @@ public class TasksController
             task.setOwnerId(ownerId);
             task.setCreationDate(dateFormat.format(date));
             task.setCreationHour(hourFormat.format(date));
-            queueService.sendTask(task);
+            try
+            {
+                queueService.sendTask(task);
+            }
+            catch (Exception e)
+            {
+                ra.addAttribute("errorCode",e.getMessage());
+            }
+
             return "redirect:/logged/results";
         }
     }
 
     @PostMapping("/logged/tasks/upload")
-    public String uploadXlsx(@RequestParam("xlsxFile") MultipartFile xlsxFile, Model model, HttpServletRequest request )
+    public String uploadXlsx(@RequestParam("xlsxFile") MultipartFile xlsxFile, Model model, HttpServletRequest request, RedirectAttributes ra )
     {
         Principal principal = request.getUserPrincipal();
         if(principal!=null)
@@ -177,6 +186,7 @@ public class TasksController
             catch (Exception e)
             {
                 logger.error(e.getMessage());
+                ra.addAttribute("errorCode",e.getMessage());
             }
             return "redirect:/logged/results";
         }

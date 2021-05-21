@@ -37,8 +37,17 @@ public class BuildedUserService
         user2.setPassword(passwordEncoder.encode("zaq1@wsx2020"));
         user2.setRole("ROLE_USER");
         user2.setEnabled(false);
-        userRepository.save(admin);
-        userRepository.save(user);
-        userRepository.save(user2);
+        if(!userRepository.existsUserByUsername(admin.getUsername()))
+        {
+            userRepository.save(admin);
+        }
+        if(!userRepository.existsUserByUsername(user.getUsername()))
+        {
+            userRepository.save(user);
+        }
+        if(!userRepository.existsUserByUsername(user2.getUsername()))
+        {
+            userRepository.save(user2);
+        }
     }
 }

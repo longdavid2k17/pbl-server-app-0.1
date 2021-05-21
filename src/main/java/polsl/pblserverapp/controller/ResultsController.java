@@ -38,7 +38,7 @@ public class ResultsController
     }
 
     @GetMapping("/logged/results")
-    public String results(Model model, HttpServletRequest request,@ModelAttribute("message") String message)
+    public String results(Model model, HttpServletRequest request,@ModelAttribute("message") String message,@ModelAttribute("errorCode") String errorCode)
     {
         Principal principal = request.getUserPrincipal();
 
@@ -52,15 +52,24 @@ public class ResultsController
                 model.addAttribute("users",userRepository.findAll());
                 model.addAttribute("filter",new Filter());
                 model.addAttribute("message",message);
+                model.addAttribute("errorCode",errorCode);
             }
             else
             {
                 model.addAttribute("results",resultRepository.findByOwnerUsername(user.getUsername()));
                 model.addAttribute("filter",new Filter());
                 model.addAttribute("message",message);
+                model.addAttribute("errorCode",errorCode);
+            }
+            try
+            {
+                queueService.areAnyMessages();
+            }
+            catch (Exception e)
+            {
+                model.addAttribute("errorCode",e.getMessage());
             }
 
-            queueService.areAnyMessages();
             return "resultDir/results";
         }
         else
@@ -86,7 +95,14 @@ public class ResultsController
             model.addAttribute("filter",new Filter());
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
 
-            queueService.areAnyMessages();
+            try
+            {
+                queueService.areAnyMessages();
+            }
+            catch (Exception e)
+            {
+                model.addAttribute("errorCode",e.getMessage());
+            }
 
             return "resultDir/results";
         }
@@ -114,7 +130,14 @@ public class ResultsController
             model.addAttribute("filter",new Filter());
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
 
-            queueService.areAnyMessages();
+            try
+            {
+                queueService.areAnyMessages();
+            }
+            catch (Exception e)
+            {
+                model.addAttribute("errorCode",e.getMessage());
+            }
             return "resultDir/results";
         }
         else
