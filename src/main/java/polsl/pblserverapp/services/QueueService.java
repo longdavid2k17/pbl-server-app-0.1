@@ -2,8 +2,10 @@ package polsl.pblserverapp.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
+import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Properties;
 
 @Service
 public class QueueService
@@ -39,6 +42,8 @@ public class QueueService
         this.resultsRepository = resultsRepository;
         this.userRepository = userRepository;
         factory = new CachingConnectionFactory(configuration.getHostAddress());
+        factory.setUsername("springuser");
+        factory.setPassword("springpassword");
         this.rabbitTemplate = new RabbitTemplate(factory);
     }
 
@@ -65,13 +70,21 @@ public class QueueService
                 result.setEndingDate("-");
                 result.setEndingHour("-");
                 result.setOwnerUsername(task.getOwnerUsername());
+                result.setQueueName(task.getSelectedQueueName());
                 result.setShapeId(task.getShape().getShapeId());
                 result.setFullCommand(buildedTask.toString());
                 result.setResultsUrl(configuration.getLocalizationUrl());
                 Result savedResult = resultsRepository.save(result);
                 savedResult.setFullCommand("'"+configuration.getLocalizationUrl()+"' ID"+savedResult.getId()+" "+ buildedTask);
                 Result savedFullResult = resultsRepository.save(savedResult);
-                rabbitTemplate.convertAndSend(configuration.getOutputQueueName(),savedFullResult.getFullCommand() );
+                RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate);
+                Properties properties = rabbitAdmin.getQueueProperties(result.getQueueName());
+                if(properties==null)
+                {
+                    Queue queue = new Queue(result.getQueueName(),false,false,false);
+                    rabbitAdmin.declareQueue(queue);
+                }
+                rabbitTemplate.convertAndSend(result.getQueueName(),savedFullResult.getFullCommand() );
             }
             catch (Exception e)
             {
@@ -107,7 +120,14 @@ public class QueueService
                         Result savedResult = resultsRepository.save(result);
                         savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
                         Result savedFullResult = resultsRepository.save(savedResult);
-                        rabbitTemplate.convertAndSend(configuration.getOutputQueueName(), savedFullResult.getFullCommand());
+                        RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate);
+                        Properties properties = rabbitAdmin.getQueueProperties(result.getQueueName());
+                        if(properties==null)
+                        {
+                            Queue queue = new Queue(result.getQueueName(),false,false,false);
+                            rabbitAdmin.declareQueue(queue);
+                        }
+                        rabbitTemplate.convertAndSend(result.getQueueName(), savedFullResult.getFullCommand());
                     }
                 }
                 catch (Exception e)

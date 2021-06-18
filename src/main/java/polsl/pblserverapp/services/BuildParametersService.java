@@ -27,13 +27,5 @@ public class BuildParametersService
         {
             parameterRepository.save(new SwitchParameter("/b"));
         }
-        if(!parameterRepository.existsBySwitchParam("/c"))
-        {
-            parameterRepository.save(new SwitchParameter("/c"));
-        }
-        if(!parameterRepository.existsBySwitchParam("/d"))
-        {
-            parameterRepository.save(new SwitchParameter("/d"));
-        }
     }
 }

@@ -18,11 +18,11 @@ public class Task
     private Shape shape;
     private String ownerUsername;
     private Long ownerId;
+    private String selectedQueueName;
     private List<String> argsValues;
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Task{" +
                 "taskId=" + taskId +
                 ", creationDate='" + creationDate + '\'' +
@@ -30,6 +30,7 @@ public class Task
                 ", shape=" + shape +
                 ", ownerUsername='" + ownerUsername + '\'' +
                 ", ownerId=" + ownerId +
+                ", selectedQueueName='" + selectedQueueName + '\'' +
                 ", argsValues=" + argsValues +
                 '}';
     }

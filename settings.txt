@@ -2,4 +2,4 @@ localhost
 5672
 results
 tasks
-D:\Studia\SEMESTR II
+D:\FolderTestowy

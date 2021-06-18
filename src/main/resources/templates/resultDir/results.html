@@ -155,6 +155,7 @@
                     <div class="collapse" th:id="'podglad'+${result.id}">
                         <div class="card card-body">
                             <p>Pełna komenda użyta do zadania: <b><span th:text="${result.fullCommand}"></span></b></p>
+                            <p>Nazwa kolejki obliczeniowej: <b><span th:text="${result.queueName}"></span></b></p>
                             <div th:if="${result.shapeId!=null}">
                                 <p>ID zestawu: <a th:href="@{/logged/tasks/choosed/{id}(id=${result.shapeId})}"><b><span th:text="${result.shapeId}" title="Kliknij aby utworzyć nowe zadanie z tym zestawem"></span></b></a></p>
                             </div>

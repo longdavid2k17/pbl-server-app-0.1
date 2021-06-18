@@ -7,11 +7,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import polsl.pblserverapp.dao.QueueRepository;
 import polsl.pblserverapp.dao.ShapeRepository;
 import polsl.pblserverapp.dao.UserRepository;
-import polsl.pblserverapp.model.Shape;
-import polsl.pblserverapp.model.Task;
-import polsl.pblserverapp.model.User;
+import polsl.pblserverapp.model.*;
 import polsl.pblserverapp.services.FileLoaderService;
 import polsl.pblserverapp.services.QueueService;
 import polsl.pblserverapp.utils.ApacheXlsxUtil;
@@ -20,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TasksController
@@ -27,6 +28,7 @@ public class TasksController
     private final Logger logger = LoggerFactory.getLogger(TasksController.class);
     private final UserRepository userRepository;
     private final ShapeRepository shapeRepository;
+    private final QueueRepository queueRepository;
     private final QueueService queueService;
     private final FileLoaderService fileLoaderService;
     private Shape selectedShapeGlobal;
@@ -36,17 +38,18 @@ public class TasksController
     private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
 
 
-    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService, FileLoaderService fileLoaderService)
+    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService, FileLoaderService fileLoaderService,QueueRepository queueRepository)
     {
         this.userRepository = userRepository;
         this.shapeRepository = shapeRepository;
         this.queueService = queueService;
         this.fileLoaderService = fileLoaderService;
+        this.queueRepository = queueRepository;
         selectedShapeGlobal = null;
     }
 
     @GetMapping("/logged/tasks")
-    public String tasks(Model model, HttpServletRequest request)
+    public String tasks(Model model, HttpServletRequest request,@ModelAttribute("message") String message)
     {
         Principal principal = request.getUserPrincipal();
         if(principal!=null)
@@ -54,11 +57,40 @@ public class TasksController
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("shapeList",shapeRepository.findAll());
             model.addAttribute("user",user);
+            model.addAttribute("queues",queueRepository.findAll());
+            model.addAttribute("message",message);
+            logger.info("Queues: "+queueRepository.findAll());
             ownerUsername = principal.getName();
             ownerId = user.getUserId();
             return "newCalculations";
         }
             return "redirect:/logged";
+    }
+
+    @PostMapping("/logged/tasks/newqueue")
+    public String postNewQueue(Model model, @RequestParam String queueName,HttpServletRequest request)
+    {
+        Principal principal = request.getUserPrincipal();
+        if(principal!=null)
+        {
+            User user = userRepository.findByUsername(principal.getName());
+            model.addAttribute("user", user);
+            if(queueName!=null && !queueRepository.existsByName(queueName))
+            {
+                Queue queue = new Queue();
+                queue.setName(queueName);
+                queueRepository.save(queue);
+            }
+            else
+            {
+                logger.error("Incorrect value has passed!");
+            }
+            return "redirect:/logged/tasks";
+        }
+        else
+        {
+            return "redirect:/logged/tasks";
+        }
     }
 
     @GetMapping("/logged/tasks/choosed/{id}")
@@ -82,6 +114,7 @@ public class TasksController
                 model.addAttribute("user",user);
                 model.addAttribute("task",new Task());
                 model.addAttribute("selectedShape", selectedShape);
+                model.addAttribute("queues",queueRepository.findAll());
                 return "newCalculations";
             }
             else
@@ -107,11 +140,11 @@ public class TasksController
                 ownerId = user.getUserId();
                 Shape selectedShape = shapeRepository.findByShapeId(Long.valueOf(shapeId));
                 selectedShapeGlobal = selectedShape;
-                logger.info("Given ID = "+ shapeId);
                 model.addAttribute("shapeList",shapeRepository.findAll());
                 model.addAttribute("user",user);
                 model.addAttribute("task",new Task());
                 model.addAttribute("selectedShape", selectedShape);
+                model.addAttribute("queues",queueRepository.findAll());
                 return "newCalculations";
             }
             else
@@ -137,6 +170,11 @@ public class TasksController
                 logger.error("List of values has different size than primary shape!");
                 return "redirect:/";
             }
+            else if(task.getArgsValues().isEmpty())
+            {
+                logger.info("Args: "+task.getArgsValues().toString());
+                logger.error("No values was passed to parameters");
+            }
             Date date = new Date();
             task.setShape(selectedShapeGlobal);
             task.setOwnerUsername(ownerUsername);
@@ -145,6 +183,7 @@ public class TasksController
             task.setCreationHour(hourFormat.format(date));
             try
             {
+                logger.info(task.toString());
                 queueService.sendTask(task);
             }
             catch (Exception e)
@@ -153,6 +192,38 @@ public class TasksController
             }
 
             return "redirect:/logged/results";
+        }
+    }
+
+    @GetMapping("/logged/tasks/deletequeue/{queuename}")
+    public String deleteQueue(@PathVariable String queuename, Model model, HttpServletRequest request, RedirectAttributes ra)
+    {
+        Principal principal = request.getUserPrincipal();
+        if(principal!=null)
+        {
+            User user = userRepository.findByUsername(principal.getName());
+            model.addAttribute("user", user);
+            if(queuename==null || queuename.equals("tasks") || queueRepository.count()==1)
+            {
+                ra.addAttribute("message","Nie można usunąć tego elementu / jest to ostatnia kolejka");
+                return "redirect:/logged/tasks";
+            }
+            else
+            {
+                Optional<Queue> tempQueue = queueRepository.getByName(queuename);
+                if(tempQueue.isPresent())
+                {
+                    Queue queue = tempQueue.get();
+                    queueRepository.delete(queue);
+                    return "redirect:/logged/tasks";
+                }
+                else
+                    return "redirect:/logged/tasks";
+            }
+        }
+        else
+        {
+            return "redirect:/";
         }
     }
 

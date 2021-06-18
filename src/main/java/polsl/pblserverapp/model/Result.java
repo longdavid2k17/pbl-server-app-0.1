@@ -21,6 +21,7 @@ public class Result
     private String resultStatus;
     private String resultsUrl;
     private String errorCode;
+    private String queueName;
     private Long shapeId;
     private String ownerUsername;
     private Long ownerId;

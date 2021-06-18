@@ -65,6 +65,9 @@
     </div>
 </nav>
 <div class="container">
+    <div th:if="${message}" style="color: red">
+        <h2 th:text="${message}"/>
+    </div>
     <div class="row d-flex p-2 justify-content-center">
         <div class="col-4">
             <form method="POST" class="form-container p-3"  th:action="@{/logged/tasks/choose}">
@@ -84,21 +87,45 @@
             <form method="POST" class="form-container p-3" th:action="@{/logged/tasks/send}" th:object="${task}">
                 <div class="form-group d-flex flex-column">
                     <div th:if="${selectedShape!=null}">
+
                         <b><span th:text="${selectedShape.name}"></span></b> <span th:text="${selectedShape.command}"></span>
                         <div th:each="parameter : ${selectedShape.parametersList}" class="d-flex align-items-center m-2">
                             <label for="parametr1" class="mr-2"><span th:text="${parameter.switchParam}"></span></label>
-                            <input type="text" id="parametr1" name="switchValue" th:field="*{argsValues}" th:value="${switchValue}" placeholder="wartość" class="form-control"/>
+                            <input type="text" id="parametr1" name="switchValue" th:field="*{argsValues}" th:value="${switchValue}" placeholder="wartość" class="form-control" required/>
                         </div>
+
+                        <span><b>Wybierz docelowy klaster obliczeniowy: </b></span>
+                        <div th:each="queue : ${queues}" class="d-flex align-items-center m-2">
+                            <label for="parameterQueue" class="mr-2"><span th:text="${queue.name}"></span></label>
+                            <input type="radio" id="parameterQueue" name="switchValue" th:value="${queue.name}" th:field="*{selectedQueueName}" class="form-control" required/><div th:if="${user.role=='ROLE_ADMIN'}"><a th:href="@{/logged/tasks/deletequeue/{queuename}(queuename=${queue.name})}"><button class="button-icons" type="button"><i class="fas fa-minus-circle icon-cog"></i></button></a></div>
+                        </div>
+
                         <div class="d-flex justify-content-between mt-3">
                             <button class="btn btn-success" type="reset">Reset</button>
                             <button class="btn btn-success" type="submit">Prześlij</button>
                         </div>
+
                     </div>
                     <div th:if="${selectedShape==null}">
                         <p>Wybierz zestaw</p>
                     </div>
                 </div>
             </form>
+        </div>
+    </div>
+    <div th:if="${user.role=='ROLE_ADMIN'}">
+        <div class="row d-flex p-2 justify-content-center">
+            <div class="col-4">
+                <form method="POST" class="form-container p-3" th:action="@{/logged/tasks/newqueue}">
+                    <div class="form-group d-flex flex-column">
+                        <label for="queueName"><b>Nowa kolejka:</b></label>
+                        <input type="text" id="queueName" name="queueName" th:value="${queueName}" placeholder="Nazwa"/>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-success" type="submit">Dodaj</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
     <button class="import-button" style="background-color: blue"  title="Importuj oblieczenia z pliku .CSV" data-target="#uploadModal" data-toggle="modal">+</button>
