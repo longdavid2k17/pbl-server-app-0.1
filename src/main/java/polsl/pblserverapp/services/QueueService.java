@@ -1,5 +1,6 @@
 package polsl.pblserverapp.services;
 
+import com.rabbitmq.client.Channel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Queue;
@@ -7,7 +8,6 @@ import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import polsl.pblserverapp.dao.ResultRepository;
 import polsl.pblserverapp.dao.UserRepository;
@@ -63,7 +63,7 @@ public class QueueService
                 }
 
                 Result result = new Result();
-                result.setResultStatus("Nowe zadanie");
+                result.setResultStatus("Oczekiwanie na pobranie");
                 result.setCreationDate(task.getCreationDate());
                 result.setCreationHour(task.getCreationHour());
                 result.setOwnerId(task.getOwnerId());
@@ -108,7 +108,7 @@ public class QueueService
                     for (String task : tasks)
                     {
                         Result result = new Result();
-                        result.setResultStatus("Nowe zadanie");
+                        result.setResultStatus("Oczekiwanie na pobranie");
                         result.setCreationDate(dateFormat.format(date));
                         result.setCreationHour(hourFormat.format(date));
                         result.setOwnerId(ownerId);
@@ -116,6 +116,7 @@ public class QueueService
                         result.setEndingHour("-");
                         result.setOwnerUsername(user.getUsername());
                         result.setFullCommand(task);
+                        result.setQueueName(configuration.getOutputQueueName());
                         result.setResultsUrl(configuration.getLocalizationUrl());
                         Result savedResult = resultsRepository.save(result);
                         savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
@@ -139,37 +140,24 @@ public class QueueService
         }
     }
 
-
-    @Scheduled(fixedRate = 1000)
     public void areAnyMessages() throws Exception
     {
-        try
-        {
-            Object message = rabbitTemplate.receiveAndConvert(configuration.getInputQueueName());
-            if(message!=null)
-            {
-                String mess = null;
-                mess= new String((byte[]) message, StandardCharsets.UTF_8);
-                if(mess!=null)
-                {
-                    Optional<Result> optionalResult = checkResult(mess);
-                    if(optionalResult.isPresent())
-                    {
-                        Result result = optionalResult.get();
-                        resultsRepository.save(result);
-                    }
-                    else
-                    {
-                        logger.error("Metoda areAnyMessages() - Nie ma takiego rekordu!");
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            logger.error("Error while connection! Code: "+e.getMessage());
-            throw new Exception("Error while connection!\nCheck your RabbitMQ server!\n Code: "+e.getMessage());
-        }
+       Connection connection = factory.createConnection();
+       Channel channel = connection.createChannel(true);
+       channel.basicConsume(configuration.getInputQueueName(), true, (consumerTag, message) ->
+       {
+           String m = new String(message.getBody(), StandardCharsets.UTF_8);
+           Optional<Result> optionalResult = checkResult(m);
+           if(optionalResult.isPresent())
+           {
+               Result result = optionalResult.get();
+               resultsRepository.save(result);
+           }
+           else
+           {
+               logger.error("Metoda areAnyMessages() - Nie ma takiego rekordu!");
+           }
+       },consumerTag -> {});
 
     }
 
