@@ -228,7 +228,7 @@ public class TasksController
     }
 
     @PostMapping("/logged/tasks/upload")
-    public String uploadXlsx(@RequestParam("xlsxFile") MultipartFile xlsxFile, Model model, HttpServletRequest request, RedirectAttributes ra )
+    public String uploadXlsx(@RequestParam("xlsxFile") MultipartFile xlsxFile, @RequestParam("queueId") Long queueId, Model model, HttpServletRequest request, RedirectAttributes ra )
     {
         Principal principal = request.getUserPrincipal();
         if(principal!=null)
@@ -250,9 +250,23 @@ public class TasksController
             }
             try
             {
-                fileLoaderService.storeExcelFile(xlsxFile.getInputStream(), ownerId);
-                logger.info("File "+ xlsxFile.getOriginalFilename()+" loaded successfully!");
-                model.addAttribute("message", "Pomyślnie załadowano plik!");
+                logger.info("QUEUE ID: "+queueId);
+                if(queueId!=null)
+                {
+                    fileLoaderService.storeExcelFile(xlsxFile.getInputStream(), ownerId,queueId);
+                    logger.info("File "+ xlsxFile.getOriginalFilename()+" loaded successfully!");
+                    model.addAttribute("message", "Pomyślnie załadowano plik!");
+                }
+                else
+                {
+                    Optional<Queue> defaultQueue = queueRepository.getByName("tasks");
+                    if(defaultQueue.isPresent())
+                    {
+                        fileLoaderService.storeExcelFile(xlsxFile.getInputStream(), ownerId,defaultQueue.get().getId());
+                        logger.info("File "+ xlsxFile.getOriginalFilename()+" loaded successfully, but inserted default queue ID!");
+                        model.addAttribute("message", "Pomyślnie załadowano plik ale oznaczono kolejkę domyślną!");
+                    }
+                }
             }
             catch (Exception e)
             {

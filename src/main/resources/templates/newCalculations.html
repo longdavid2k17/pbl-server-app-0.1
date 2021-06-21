@@ -161,6 +161,11 @@
                     <label for="xlsxFile">Plik</label>
                     <input type="file" id="xlsxFile" name="xlsxFile" accept=".xlsx, .xls" required/>
                     <hr/>
+                    <span><b>Wybierz docelowy klaster obliczeniowy: </b></span>
+                    <div th:each="queue : ${queues}" class="d-flex align-items-center m-2 form-group">
+                        <input type="radio" name="queueId" id="queueId" th:value="${queue.id}" required/>
+                        <label for="parameterQueue" class="ml-2"><span th:text="${queue.name}"></span></label>
+                    </div>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Zamknij
                     </button>

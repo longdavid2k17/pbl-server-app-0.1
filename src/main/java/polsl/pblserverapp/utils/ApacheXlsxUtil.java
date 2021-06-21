@@ -62,6 +62,9 @@ public class ApacheXlsxUtil
                 }
             }
 
+
+            //wczytywanie danych do polecenia
+
             List<String> params = new ArrayList<>();
             List<String> commandParts = new ArrayList<>();
             for(int r = 0; r < rows; r++)
@@ -92,6 +95,10 @@ public class ApacheXlsxUtil
 
                 }
             }
+
+
+            //Składnie poleceń do jednego stringa
+
             List<String> fullCommands = new ArrayList<>();
             String buildedCommand = new String();
             int counter=0;
@@ -124,6 +131,7 @@ public class ApacheXlsxUtil
             logger.error(ioe.getMessage());
             return new ArrayList<>();
         }
+
     }
 
     public static List<String> parseXlsFile(InputStream file)

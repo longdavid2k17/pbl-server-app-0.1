@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.connection.Connection;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
+import polsl.pblserverapp.dao.QueueRepository;
 import polsl.pblserverapp.dao.ResultRepository;
 import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.QueueConfiguration;
@@ -30,17 +31,19 @@ public class QueueService
     private final QueueConfiguration configuration;
     private final ResultRepository resultsRepository;
     private final UserRepository userRepository;
+    private final QueueRepository queueRepository;
     private final RabbitTemplate rabbitTemplate;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
     private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
     private Connection connection = null;
     private final CachingConnectionFactory factory;
 
-    public QueueService(QueueConfiguration configuration, ResultRepository resultsRepository,UserRepository userRepository)
+    public QueueService(QueueConfiguration configuration, ResultRepository resultsRepository, UserRepository userRepository, QueueRepository queueRepository)
     {
         this.configuration = configuration;
         this.resultsRepository = resultsRepository;
         this.userRepository = userRepository;
+        this.queueRepository = queueRepository;
         factory = new CachingConnectionFactory(configuration.getHostAddress());
         factory.setUsername("springuser");
         factory.setPassword("springpassword");
@@ -94,7 +97,7 @@ public class QueueService
         }
     }
 
-    public void sendTaskList(List<String> tasks, Long ownerId) throws Exception
+    public void sendTaskList(List<String> tasks, Long ownerId, Long queueId) throws Exception
     {
         if(!tasks.isEmpty())
         {
@@ -103,32 +106,36 @@ public class QueueService
             {
                 try
                 {
-                    User user = userRepository.findByUserId(ownerId);
-                    Date date = new Date();
-                    for (String task : tasks)
+                    Optional<polsl.pblserverapp.model.Queue> definedQueue = queueRepository.findById(queueId);
+                    if(definedQueue.isPresent())
                     {
-                        Result result = new Result();
-                        result.setResultStatus("Oczekiwanie na pobranie");
-                        result.setCreationDate(dateFormat.format(date));
-                        result.setCreationHour(hourFormat.format(date));
-                        result.setOwnerId(ownerId);
-                        result.setEndingDate("-");
-                        result.setEndingHour("-");
-                        result.setOwnerUsername(user.getUsername());
-                        result.setFullCommand(task);
-                        result.setQueueName(configuration.getOutputQueueName());
-                        result.setResultsUrl(configuration.getLocalizationUrl());
-                        Result savedResult = resultsRepository.save(result);
-                        savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
-                        Result savedFullResult = resultsRepository.save(savedResult);
-                        RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate);
-                        Properties properties = rabbitAdmin.getQueueProperties(result.getQueueName());
-                        if(properties==null)
+                        User user = userRepository.findByUserId(ownerId);
+                        Date date = new Date();
+                        for (String task : tasks)
                         {
-                            Queue queue = new Queue(result.getQueueName(),false,false,false);
-                            rabbitAdmin.declareQueue(queue);
+                            Result result = new Result();
+                            result.setResultStatus("Oczekiwanie na pobranie");
+                            result.setCreationDate(dateFormat.format(date));
+                            result.setCreationHour(hourFormat.format(date));
+                            result.setOwnerId(ownerId);
+                            result.setEndingDate("-");
+                            result.setEndingHour("-");
+                            result.setOwnerUsername(user.getUsername());
+                            result.setFullCommand(task);
+                            result.setQueueName(definedQueue.get().getName());
+                            result.setResultsUrl(configuration.getLocalizationUrl());
+                            Result savedResult = resultsRepository.save(result);
+                            savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
+                            Result savedFullResult = resultsRepository.save(savedResult);
+                            RabbitAdmin rabbitAdmin = new RabbitAdmin(rabbitTemplate);
+                            Properties properties = rabbitAdmin.getQueueProperties(result.getQueueName());
+                            if(properties==null)
+                            {
+                                Queue queue = new Queue(result.getQueueName(),false,false,false);
+                                rabbitAdmin.declareQueue(queue);
+                            }
+                            rabbitTemplate.convertAndSend(result.getQueueName(), savedFullResult.getFullCommand());
                         }
-                        rabbitTemplate.convertAndSend(result.getQueueName(), savedFullResult.getFullCommand());
                     }
                 }
                 catch (Exception e)

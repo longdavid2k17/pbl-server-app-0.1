@@ -39,7 +39,7 @@ public class FileLoaderService
         }
     }
 
-    public void storeExcelFile(InputStream file, Long ownerId)
+    public void storeExcelFile(InputStream file, Long ownerId, Long queueId)
     {
         try
         {
@@ -54,7 +54,7 @@ public class FileLoaderService
             }
 
             log.info("File imported successfully! List size: "+loadedTasks.size());
-            queueService.sendTaskList(loadedTasks, ownerId);
+            queueService.sendTaskList(loadedTasks, ownerId, queueId);
         }
         catch(Exception e)
         {
