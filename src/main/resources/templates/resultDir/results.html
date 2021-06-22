@@ -121,6 +121,7 @@
             <th scope="col">Data zakończenia</th>
             <th scope="col">Status</th>
             <th scope="col">Uwagi</th>
+            <th scope="col">Nazwa kolejki</th>
             <th scope="col">Ścieżka do pliku</th>
             <th scope="col"></th>
         </tr>
@@ -146,6 +147,7 @@
                 <div th:if="${result.errorCode!=null}">
                     <td><b><span th:text="${result.errorCode}" style="color: red">resultStatus</span></b></td>
                 </div>
+                <td th:text="${result.queueName}">Kolejka</td>
                 <td><a th:href="${result.resultsUrl}"><span th:text="${result.resultsUrl}">resultsUrl</span></a></td>
                 <td><button class="btn btn-primary" type="button" data-toggle="collapse" th:data-target="'#podglad'+${result.id}" aria-expanded="false" aria-controls="collapseExample">
                     Podgląd</button></td>
