@@ -76,7 +76,6 @@ public class QueueService
                 result.setQueueName(task.getSelectedQueueName());
                 result.setShapeId(task.getShape().getShapeId());
                 result.setFullCommand(buildedTask.toString());
-                result.setResultsUrl(configuration.getLocalizationUrl());
                 Result savedResult = resultsRepository.save(result);
                 savedResult.setFullCommand("'"+configuration.getLocalizationUrl()+"' ID"+savedResult.getId()+" "+ buildedTask);
                 Result savedFullResult = resultsRepository.save(savedResult);
@@ -123,7 +122,6 @@ public class QueueService
                             result.setOwnerUsername(user.getUsername());
                             result.setFullCommand(task);
                             result.setQueueName(definedQueue.get().getName());
-                            result.setResultsUrl(configuration.getLocalizationUrl());
                             Result savedResult = resultsRepository.save(result);
                             savedResult.setFullCommand("'" + configuration.getLocalizationUrl() + "' ID" + savedResult.getId() + " " + task);
                             Result savedFullResult = resultsRepository.save(savedResult);
