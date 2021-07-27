@@ -5,9 +5,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import polsl.pblserverapp.services.UserDetailsServiceImplementation;
 
@@ -30,6 +32,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(HttpSecurity http) throws Exception
     {
+        http.sessionManagement()
+                .maximumSessions(2)
+                .and()
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED);
+
         http.headers().frameOptions().disable();
         http.csrf().disable();
         http
@@ -71,5 +78,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter
     public UserDetailsService userDetailsService()
     {
         return new UserDetailsServiceImplementation();
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher()
+    {
+        return new HttpSessionEventPublisher();
     }
 }

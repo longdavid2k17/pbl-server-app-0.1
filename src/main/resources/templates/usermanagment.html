@@ -38,17 +38,18 @@
     <ul class="navbar-nav w-100">
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Zestawy
+          Zadania
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <div th:if="${user.role=='ROLE_ADMIN'}">
-            <a class="dropdown-item" th:href="@{/logged/shapes}">Zestawy parametrów</a>
-            <a class="dropdown-item" th:href="@{/logged/shape/new}">Dodaj zestaw</a>
             <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
+            <a class="dropdown-item" th:href="@{/logged/importtasks}">Importuj zadania</a>
+            <a class="dropdown-item" th:href="@{/logged/queues}">Zarządzaj kolejkami</a>
           </div>
           <div th:if="${user.role!='ROLE_ADMIN'}">
-            <a class="dropdown-item" th:href="@{/logged/shapes}">Zestaw parametrów</a>
             <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
+            <a class="dropdown-item" th:href="@{/logged/importtasks}">Importuj zadania</a>
+            <a class="dropdown-item" th:href="@{/logged/queues}">Zarządzaj kolejkami</a>
           </div>
         </div>
       </li>
