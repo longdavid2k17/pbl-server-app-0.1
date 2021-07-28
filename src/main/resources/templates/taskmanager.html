@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+  />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <title>PBL</title>
+  <link
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+          crossorigin="anonymous"
+  />
+  <link
+          href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css"
+          rel="stylesheet"
+          crossorigin="anonymous"
+  />
+  <link rel="stylesheet" th:href="@{/css/index.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/globalStyles.css}" />
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous" defer></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous" defer></script>
+  <script src="https://kit.fontawesome.com/b78e2da6f5.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" th:href="@{/logged}">PBL</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav w-100">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Zadania
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <div th:if="${user.role=='ROLE_ADMIN'}">
+            <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
+            <a class="dropdown-item" th:href="@{/logged/importtasks}">Importuj zadania</a>
+            <a class="dropdown-item" th:href="@{/logged/queues}">Zarządzaj kolejkami</a>
+          </div>
+          <div th:if="${user.role!='ROLE_ADMIN'}">
+            <a class="dropdown-item" th:href="@{/logged/tasks}">Nowe zadanie</a>
+            <a class="dropdown-item" th:href="@{/logged/importtasks}">Importuj zadania</a>
+            <a class="dropdown-item" th:href="@{/logged/queues}">Zarządzaj kolejkami</a>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" th:href="@{/logged/results}">Wyniki</a>
+      </li>
+      <li class="nav-item">
+        <div th:if="${user.role=='ROLE_ADMIN'}">
+          <a class="nav-link" th:href="@{/manager}">Zarządzaj użytkownikami</a>
+        </div>
+      </li>
+      <li class="nav-item ml-auto">
+        <a class="nav-link" th:href="@{/logout}">Wyloguj</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<article>
+    <table class="table">
+        <thead>
+            <tr>
+                <td><div class="form-check">
+                    <input class="form-check-input" type="checkbox" title="Zaznacz wszystkie">
+                </div></td>
+                <td>Zadanie</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><div class="form-check">
+                    <input class="form-check-input" type="checkbox">
+                </div></td>
+                <td>Zadanie 1 /p=23 /q=32</td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr><td>Wybrano: X zadań</td></tr>
+        </tfoot>
+    </table>
+    <div class="d-flex justify-content-end">
+        <button class="btn btn-primary">Wyślij</button>
+    </div>
+</article>
+</body>
+</html>
