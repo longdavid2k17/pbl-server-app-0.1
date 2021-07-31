@@ -67,32 +67,6 @@ public class TasksController
             return "redirect:/logged";
     }
 
-    @PostMapping("/logged/tasks/newqueue")
-    public String postNewQueue(Model model, @RequestParam String queueName,HttpServletRequest request)
-    {
-        Principal principal = request.getUserPrincipal();
-        if(principal!=null)
-        {
-            User user = userRepository.findByUsername(principal.getName());
-            model.addAttribute("user", user);
-            if(queueName!=null && !queueRepository.existsByName(queueName))
-            {
-                Queue queue = new Queue();
-                queue.setName(queueName);
-                queueRepository.save(queue);
-            }
-            else
-            {
-                logger.error("Incorrect value has passed!");
-            }
-            return "redirect:/logged/tasks";
-        }
-        else
-        {
-            return "redirect:/logged/tasks";
-        }
-    }
-
     @GetMapping("/logged/tasks/choosed/{id}")
     public String selectShapeFromList(@PathVariable(value = "id") Long shapeId, Model model,HttpServletRequest request)
     {
@@ -192,38 +166,6 @@ public class TasksController
             }
 
             return "redirect:/logged/results";
-        }
-    }
-
-    @GetMapping("/logged/tasks/deletequeue/{queuename}")
-    public String deleteQueue(@PathVariable String queuename, Model model, HttpServletRequest request, RedirectAttributes ra)
-    {
-        Principal principal = request.getUserPrincipal();
-        if(principal!=null)
-        {
-            User user = userRepository.findByUsername(principal.getName());
-            model.addAttribute("user", user);
-            if(queuename==null || queuename.equals("tasks") || queueRepository.count()==1)
-            {
-                ra.addAttribute("message","Nie można usunąć tego elementu / jest to ostatnia kolejka");
-                return "redirect:/logged/tasks";
-            }
-            else
-            {
-                Optional<Queue> tempQueue = queueRepository.getByName(queuename);
-                if(tempQueue.isPresent())
-                {
-                    Queue queue = tempQueue.get();
-                    queueRepository.delete(queue);
-                    return "redirect:/logged/tasks";
-                }
-                else
-                    return "redirect:/logged/tasks";
-            }
-        }
-        else
-        {
-            return "redirect:/";
         }
     }
 
