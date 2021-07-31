@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>polsl</groupId>
 	<artifactId>pbl-server-app</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.01</version>
 	<name>pbl-server-app</name>
 	<description>Server application for generating and managing data for neural network</description>
 	<properties>
@@ -36,6 +36,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-model</artifactId>
+			<version>3.3.9</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

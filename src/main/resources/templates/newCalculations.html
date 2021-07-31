@@ -107,9 +107,11 @@
                                 </a>
                             </div>
                         </div>
-
                         <div class="d-flex justify-content-between mt-3">
-                            <button class="btn btn-success" type="reset">Reset</button>
+                            <p>Zarządzanie kolejkami zostało przeniesione do osobnej zakładki: <br><i>Zadania -> Zarządzanie kolejkami</i></p>
+                        </div>
+                        <div class="d-flex justify-content-between mt-3">
+                            <button class="btn btn-secondary" type="reset">Reset</button>
                             <button class="btn btn-success" type="submit">Prześlij</button>
                         </div>
 
@@ -119,21 +121,6 @@
                     </div>
                 </div>
             </form>
-        </div>
-    </div>
-    <div th:if="${user.role=='ROLE_ADMIN'}">
-        <div class="row d-flex p-2 justify-content-center">
-            <div class="col-4">
-                <form method="POST" class="form-container p-3" th:action="@{/logged/tasks/newqueue}">
-                    <div class="form-group d-flex flex-column">
-                        <label for="queueName"><b>Nowa kolejka:</b></label>
-                        <input type="text" id="queueName" name="queueName" th:value="${queueName}" placeholder="Nazwa" class="form-control"/>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-success" type="submit">Dodaj</button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
     <button class="import-button" style="background-color: blue"  title="Importuj obliczenia z pliku .CSV" data-target="#uploadModal" data-toggle="modal">+</button>
@@ -178,5 +165,10 @@
         </div>
     </div>
 </div>
+<footer class="text-center text-lg-start bg-dark text-muted">
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        <p>Wersja aplikacji : <span th:text="${version}"></span> © 2021</p>
+    </div>
+</footer>
 </body>
 </html>

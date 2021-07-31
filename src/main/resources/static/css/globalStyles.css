@@ -4,10 +4,29 @@ margin: 0;
 padding: 0;
 box-sizing: border-box;
 }
+html{
+    position: relative;
+    min-height: 100%;
+}
 body
 {
-margin: 0;
-padding: 0;
+    margin: 0 0 70px;
+    /* bottom = footer height */
+    padding: 0;
+}
+
+tr.border_bottom td {
+    border-bottom: 1px solid black;
+}
+
+footer {
+    background-color: orange;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 70px;
+    width: 100%;
+    overflow: hidden;
 }
 
 .import-button{
@@ -16,8 +35,8 @@ padding: 0;
     background-color: green;
     border-radius: 50%;
     position: fixed;
-    right: 20px;
-    bottom: 20px;
+    right: 100px;
+    bottom: 100px;
     border: none;
     color: white;
     font-size: 25px;
@@ -48,4 +67,44 @@ padding: 0;
 .form-container {
     border: solid 2px black;
     background-color: white;
+}
+
+.button {
+    display: inline-block;
+    border-radius: 4px;
+    background-color: #f4511e;
+    border: none;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 28px;
+    padding: 20px;
+    width: 200px;
+    transition: all 0.5s;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.button span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button span:after {
+    content: '\00bb';
+    position: absolute;
+    opacity: 0;
+    top: 0;
+    right: -20px;
+    transition: 0.5s;
+}
+
+.button:hover span {
+    padding-right: 25px;
+}
+
+.button:hover span:after {
+    opacity: 1;
+    right: 0;
 }

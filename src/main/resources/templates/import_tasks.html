@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-  <title>PBL</title>
+    <title>PBL</title>
   <link
           href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
           rel="stylesheet"
@@ -60,52 +60,92 @@
   </div>
 </nav>
 <div class="container">
-  <div th:if="${user.role=='ROLE_ADMIN'}">
-    <div class="row d-flex p-2 justify-content-center" style="text-align: center">
-      <div class="col-4">
-        <div th:if="${message}" style="color: green">
-          <h2 th:text="${message}"/>
-        </div>
-        <div th:if="${errorCode}" style="color: red">
-          <h2 th:text="${errorCode}"/>
-        </div>
-        <p><b>Pamiętaj aby upewnić się że prawidłowa kolejka jest używana na docelowym klastrze obliczeniowym!</b></p>
+  <div class="row d-flex p-2 justify-content-center">
+    <div class="col-4">
+      <div th:if="${message}" style="color: green">
+        <h2 th:text="${message}"/>
       </div>
-    </div>
-    <div class="row d-flex p-2 justify-content-center">
-        <div class="col-4">
-            <div class="form-container p-3">
-              <label><b>Ilość kolejek w bazie: <span th:text="${queues.size()}"></span></b></label>
-              <br/>
-              <label><b>Istniejące kolejki:</b></label>
-              <div th:each="queue : ${queues}" class="d-flex align-items-center m-2">
-                <span th:text="${queue.name}"></span>
-                <div th:if="${user.role=='ROLE_ADMIN'}" class="ml-auto">
-                  <a th:href="@{/logged/queues/delete/{queuename}(queuename=${queue.name})}">
-                    <button class="button-icons" type="button" title="Usuń kolejkę">
-                      <i class="fas fa-minus-circle icon-cog"></i>
-                    </button>
-                  </a>
-                </div>
-              </div>
-        </div>
+      <div th:if="${errorCode}" style="color: red">
+        <h2 th:text="${errorCode}"/>
       </div>
+      <center><button class="button" style="vertical-align:middle" title="Importuj obliczenia z pliku .xls lub .xlsx" data-target="#uploadModal" data-toggle="modal"><span>Wczytaj </span></button></center>
     </div>
-    <div class="row d-flex p-2 justify-content-center">
-      <div class="col-4">
-        <form method="POST" class="form-container p-3" th:action="@{/logged/queues/newqueue}">
-          <div class="form-group d-flex flex-column">
-            <label for="queueName"><b>Nowa kolejka:</b></label>
-            <input type="text" id="queueName" name="queueName" th:value="${queueName}" placeholder="Nazwa" class="form-control" required/>
+  </div>
+</div>
+
+
+<div>
+  <article>
+    <table class="table">
+      <thead>
+      <tr th:if="${importedTasks.empty}">
+        <td colspan="6">Brak wyników </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="form-check">
+          <input class="form-check-input" type="checkbox" title="Zaznacz wszystkie">
           </div>
-          <div class="d-flex justify-content-end">
-            <button class="btn btn-success" type="submit">Dodaj</button>
+        </td>
+        <td>Zadanie</td>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td><div class="form-check">
+          <input class="form-check-input" type="checkbox">
+        </div></td>
+        <td>Zadanie 1 /p=23 /q=32</td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr><td>Wybrano: X zadań</td></tr>
+      </tfoot>
+    </table>
+    <div class="d-flex justify-content-end">
+      <button class="btn btn-primary">Wyślij</button>
+    </div>
+  </article>
+</div>
+
+<div
+        class="modal fade"
+        id="uploadModal"
+        tabindex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadModalLabel">Wybierz plik</h5>
+        <button
+                type="button"
+                class="close"
+                data-dismiss="modal"
+                aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="post" th:action="@{/logged/importtasks/upload}" enctype="multipart/form-data">
+          <label for="xlsxFile">Plik</label>
+          <input type="file" id="xlsxFile" name="xlsxFile" accept=".xlsx, .xls" required/>
+          <hr/>
+          <span><b>Wybierz docelowy klaster obliczeniowy: </b></span>
+          <div th:each="queue : ${queues}" class="d-flex align-items-center m-2 form-group">
+            <input type="radio" name="queueId" id="queueId" th:value="${queue.id}" required/>
+            <label for="queueId" class="ml-2"><span th:text="${queue.name}"></span></label>
           </div>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Zamknij
+          </button>
+          <button type="submit" class="btn btn-primary">
+            Wczytaj
+          </button>
         </form>
       </div>
     </div>
   </div>
-</div>
 </div>
 <footer class="text-center text-lg-start bg-dark text-muted">
   <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">

@@ -1,5 +1,6 @@
 package polsl.pblserverapp.controller;
 
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -10,8 +11,10 @@ import polsl.pblserverapp.dao.QueueRepository;
 import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.Queue;
 import polsl.pblserverapp.model.User;
+import polsl.pblserverapp.services.UtilService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.Optional;
 
@@ -21,11 +24,13 @@ public class QueueManagementController
     private final Logger logger = LoggerFactory.getLogger(QueueManagementController.class);
     private final QueueRepository queueRepository;
     private final UserRepository userRepository;
+    private final UtilService utilService;
 
-    public QueueManagementController(QueueRepository queueRepository,UserRepository userRepository)
+    public QueueManagementController(QueueRepository queueRepository,UserRepository userRepository,UtilService utilService)
     {
         this.queueRepository = queueRepository;
         this.userRepository = userRepository;
+        this.utilService = utilService;
     }
 
     @GetMapping("/logged/queues")
@@ -39,6 +44,14 @@ public class QueueManagementController
             model.addAttribute("user",user);
             model.addAttribute("message",message);
             model.addAttribute("errorCode",errorCode);
+            try
+            {
+                model.addAttribute("version",utilService.getVersion());
+            }
+            catch (XmlPullParserException | IOException e)
+            {
+                logger.error(e.getMessage());
+            }
             return "queue_management";
         }
         return "redirect:/logged";

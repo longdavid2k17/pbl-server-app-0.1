@@ -149,7 +149,7 @@
             <td colspan="6"> Brak wyników </td>
         </tr>
         <div th:each="result : ${results}">
-            <tr>
+            <tr class="border_bottom">
                 <td th:text="${result.id}">Id</td>
                 <td><span th:text="${result.creationDate}"></span> <span th:text="${result.creationHour}"></span></td>
                 <div th:if="${result.endingDate=='-'}">
@@ -198,7 +198,11 @@
             <a th:href="@{/logged/results/delete}"><button type="button" class="btn btn-danger" title="Tej operacji nie da się cofnąć!" disabled>Usuń wszystkie rekordy</button> </a>
         </div>
     </div>
-
 </div>
+<footer class="text-center text-lg-start bg-dark text-muted">
+    <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+        <p>Wersja aplikacji : <span th:text="${version}"></span> © 2021</p>
+    </div>
+</footer>
 </body>
 </html>

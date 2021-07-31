@@ -1,5 +1,6 @@
 package polsl.pblserverapp.controller;
 
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -8,9 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.User;
+import polsl.pblserverapp.services.UtilService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -18,11 +21,13 @@ import java.util.List;
 public class UserManagementController
 {
     private final UserRepository userRepository;
+    private final UtilService utilService;
     private final Logger log = LoggerFactory.getLogger(UserManagementController.class);
 
-    public UserManagementController(UserRepository userRepository)
+    public UserManagementController(UserRepository userRepository,UtilService utilService)
     {
         this.userRepository = userRepository;
+        this.utilService = utilService;
     }
 
     @GetMapping("/manager")
@@ -38,6 +43,14 @@ public class UserManagementController
         {
             model.addAttribute("user",user);
             model.addAttribute("userList",userRepository.findAll());
+            try
+            {
+                model.addAttribute("version",utilService.getVersion());
+            }
+            catch (XmlPullParserException | IOException e)
+            {
+                log.error(e.getMessage());
+            }
             return "usermanagment";
         }
     }

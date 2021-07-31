@@ -1,5 +1,6 @@
 package polsl.pblserverapp.controller;
 
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -13,9 +14,11 @@ import polsl.pblserverapp.dao.UserRepository;
 import polsl.pblserverapp.model.*;
 import polsl.pblserverapp.services.FileLoaderService;
 import polsl.pblserverapp.services.QueueService;
+import polsl.pblserverapp.services.UtilService;
 import polsl.pblserverapp.utils.ApacheXlsxUtil;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +33,7 @@ public class TasksController
     private final ShapeRepository shapeRepository;
     private final QueueRepository queueRepository;
     private final QueueService queueService;
+    private final UtilService utilService;
     private final FileLoaderService fileLoaderService;
     private Shape selectedShapeGlobal;
     private String ownerUsername;
@@ -38,13 +42,14 @@ public class TasksController
     private final SimpleDateFormat hourFormat = new SimpleDateFormat("HH:mm:ss");
 
 
-    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService, FileLoaderService fileLoaderService,QueueRepository queueRepository)
+    public TasksController(UserRepository userRepository,ShapeRepository shapeRepository, QueueService queueService, FileLoaderService fileLoaderService,QueueRepository queueRepository,UtilService utilService)
     {
         this.userRepository = userRepository;
         this.shapeRepository = shapeRepository;
         this.queueService = queueService;
         this.fileLoaderService = fileLoaderService;
         this.queueRepository = queueRepository;
+        this.utilService = utilService;
         selectedShapeGlobal = null;
     }
 
@@ -59,7 +64,14 @@ public class TasksController
             model.addAttribute("user",user);
             model.addAttribute("queues",queueRepository.findAll());
             model.addAttribute("message",message);
-            logger.info("Queues: "+queueRepository.findAll());
+            try
+            {
+                model.addAttribute("version",utilService.getVersion());
+            }
+            catch (XmlPullParserException | IOException e)
+            {
+                logger.error(e.getMessage());
+            }
             ownerUsername = principal.getName();
             ownerId = user.getUserId();
             return "newCalculations";

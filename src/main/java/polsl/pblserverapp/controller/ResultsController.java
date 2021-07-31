@@ -1,5 +1,6 @@
 package polsl.pblserverapp.controller;
 
+import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,10 @@ import polsl.pblserverapp.model.Filter;
 import polsl.pblserverapp.model.Result;
 import polsl.pblserverapp.model.User;
 import polsl.pblserverapp.services.QueueService;
+import polsl.pblserverapp.services.UtilService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -26,14 +29,16 @@ public class ResultsController
     private final UserRepository userRepository;
     private final QueueService queueService;
     private final ResultRepository resultRepository;
+    private final UtilService utilService;
     private final Logger logger = LoggerFactory.getLogger(ResultsController.class);
     private final List<String> statuses;
 
-    public ResultsController(UserRepository userRepository, QueueService queueService,ResultRepository resultRepository)
+    public ResultsController(UserRepository userRepository, QueueService queueService,ResultRepository resultRepository,UtilService utilService)
     {
         this.userRepository = userRepository;
         this.queueService = queueService;
         this.resultRepository = resultRepository;
+        this.utilService = utilService;
         this.statuses = new ArrayList<>();
         this.statuses.add("Nowe zadanie");
         this.statuses.add("Oczekiwanie na pobranie");
@@ -60,6 +65,14 @@ public class ResultsController
                 model.addAttribute("statuses",statuses);
                 model.addAttribute("message",message);
                 model.addAttribute("errorCode",errorCode);
+                try
+                {
+                    model.addAttribute("version",utilService.getVersion());
+                }
+                catch (XmlPullParserException | IOException e)
+                {
+                    logger.error(e.getMessage());
+                }
             }
             else
             {
@@ -68,6 +81,14 @@ public class ResultsController
                 model.addAttribute("statuses",statuses);
                 model.addAttribute("message",message);
                 model.addAttribute("errorCode",errorCode);
+                try
+                {
+                    model.addAttribute("version",utilService.getVersion());
+                }
+                catch (XmlPullParserException | IOException e)
+                {
+                    logger.error(e.getMessage());
+                }
             }
             try
             {
@@ -103,6 +124,14 @@ public class ResultsController
             model.addAttribute("filter",new Filter());
             model.addAttribute("statuses",statuses);
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
+            try
+            {
+                model.addAttribute("version",utilService.getVersion());
+            }
+            catch (XmlPullParserException | IOException e)
+            {
+                logger.error(e.getMessage());
+            }
 
             try
             {
@@ -139,6 +168,14 @@ public class ResultsController
             model.addAttribute("filter",new Filter());
             model.addAttribute("statuses",statuses);
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
+            try
+            {
+                model.addAttribute("version",utilService.getVersion());
+            }
+            catch (XmlPullParserException | IOException e)
+            {
+                logger.error(e.getMessage());
+            }
 
             try
             {
