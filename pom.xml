@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>polsl</groupId>
 	<artifactId>pbl-server-app</artifactId>
-	<version>1.01</version>
+	<version>1.03</version>
 	<name>pbl-server-app</name>
 	<description>Server application for generating and managing data for neural network</description>
 	<properties>

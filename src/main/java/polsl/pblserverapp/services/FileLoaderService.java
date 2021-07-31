@@ -62,4 +62,28 @@ public class FileLoaderService
             throw new RuntimeException("Error! " + e.getMessage());
         }
     }
+
+    public List<String> loadAndReturnExcelTasks(InputStream file, Long ownerId, Long queueId)
+    {
+        try
+        {
+            List<String> loadedTasks;
+            if(ApacheXlsxUtil.format.equals(ApacheXlsxUtil.xlsxExtension))
+            {
+                loadedTasks  = ApacheXlsxUtil.parseXlsxFile(file);
+            }
+            else
+            {
+                loadedTasks = ApacheXlsxUtil.parseXlsFile(file);
+            }
+
+            log.info("File imported successfully! List size: "+loadedTasks.size());
+            return loadedTasks;
+        }
+        catch(Exception e)
+        {
+            log.error("Error while importing .xlsx file. Code: "+e.getMessage());
+            throw new RuntimeException("Error! " + e.getMessage());
+        }
+    }
 }
