@@ -27,12 +27,20 @@ public class ResultsController
     private final QueueService queueService;
     private final ResultRepository resultRepository;
     private final Logger logger = LoggerFactory.getLogger(ResultsController.class);
+    private final List<String> statuses;
 
     public ResultsController(UserRepository userRepository, QueueService queueService,ResultRepository resultRepository)
     {
         this.userRepository = userRepository;
         this.queueService = queueService;
         this.resultRepository = resultRepository;
+        this.statuses = new ArrayList<>();
+        this.statuses.add("Nowe zadanie");
+        this.statuses.add("Oczekiwanie na pobranie");
+        this.statuses.add("Pobrano");
+        this.statuses.add("Rozpoczęto obliczanie");
+        this.statuses.add("Zakończono sukcesem");
+        this.statuses.add("Zakończono niepowodzeniem");
     }
 
     @GetMapping("/logged/results")
@@ -49,6 +57,7 @@ public class ResultsController
                 model.addAttribute("results",resultRepository.findAll());
                 model.addAttribute("users",userRepository.findAll());
                 model.addAttribute("filter",new Filter());
+                model.addAttribute("statuses",statuses);
                 model.addAttribute("message",message);
                 model.addAttribute("errorCode",errorCode);
             }
@@ -56,6 +65,7 @@ public class ResultsController
             {
                 model.addAttribute("results",resultRepository.findByOwnerUsername(user.getUsername()));
                 model.addAttribute("filter",new Filter());
+                model.addAttribute("statuses",statuses);
                 model.addAttribute("message",message);
                 model.addAttribute("errorCode",errorCode);
             }
@@ -91,6 +101,7 @@ public class ResultsController
                 model.addAttribute("users",userRepository.findAll());
             }
             model.addAttribute("filter",new Filter());
+            model.addAttribute("statuses",statuses);
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
 
             try
@@ -126,6 +137,7 @@ public class ResultsController
                 model.addAttribute("users",userRepository.findAll());
             }
             model.addAttribute("filter",new Filter());
+            model.addAttribute("statuses",statuses);
             model.addAttribute("results",filterResult(resultRepository.findAll(),filter));
 
             try
@@ -200,7 +212,7 @@ public class ResultsController
     {
         List<Result> filteredResults;
         logger.info("Starting list length: "+primaryList.size());
-        boolean isStartDatePresent = false,isStartHourPresent = false,isEndDatePresent = false,isEndHourPresent = false;
+        boolean isStartDatePresent = false,isStartHourPresent = false,isEndDatePresent = false,isEndHourPresent = false,isStatusPresent = false;
         boolean lookForAllUsers = false;
 
             if(!filter.getStartDate().equals(""))
@@ -218,6 +230,10 @@ public class ResultsController
             if(!filter.getEndHour().equals(""))
             {
                 isEndHourPresent=true;
+            }
+            if(!filter.getStatus().equals(""))
+            {
+                isStatusPresent=true;
             }
             if(filter.getUserId().equals(""))
             {
@@ -252,6 +268,11 @@ public class ResultsController
         if(isEndHourPresent)
         {
             filteredResults = filterByEndHour(filteredResults,filter.getEndHour());
+            logger.info("List length after next filtering: "+filteredResults.size());
+        }
+        if(isStatusPresent)
+        {
+            filteredResults = filterByStatus(filteredResults,filter.getStatus());
             logger.info("List length after next filtering: "+filteredResults.size());
         }
 
@@ -305,6 +326,22 @@ public class ResultsController
                 cal2.set(Calendar.SECOND, Integer.parseInt(parts[2]));
 
                 if (cal1.after(cal2) || cal1.equals(cal2))
+                {
+                    endHourFilteredResults.add(result);
+                }
+            }
+        }
+        return endHourFilteredResults;
+    }
+    public List<Result> filterByStatus(List<Result> filteredResults, String status)
+    {
+        List<Result> endHourFilteredResults = new ArrayList<>();
+
+        for(Result result : filteredResults)
+        {
+            if(!result.getResultStatus().equals("-"))
+            {
+                if (result.getResultStatus().equals(status))
                 {
                     endHourFilteredResults.add(result);
                 }

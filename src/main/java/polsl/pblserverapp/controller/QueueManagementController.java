@@ -52,17 +52,24 @@ public class QueueManagementController
         {
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user", user);
-            if(queueName!=null && !queueName.equals("") && !queueRepository.existsByName(queueName))
+            if(queueName!=null)
             {
-                Queue queue = new Queue();
-                queue.setName(queueName);
-                queueRepository.save(queue);
-                redirectAttributes.addAttribute("message","Utworzono kolejkę: "+queueName);
+                if(!queueName.equals("") && !queueRepository.existsByName(queueName))
+                {
+                    Queue queue = new Queue();
+                    queue.setName(queueName);
+                    queueRepository.save(queue);
+                    redirectAttributes.addAttribute("message","Utworzono kolejkę: "+queueName);
+                }
+                else
+                {
+                    redirectAttributes.addAttribute("errorCode","Nie udało się utworzyć kolejki. Taka kolejka już istnieje!");
+                }
             }
             else
             {
                 logger.error("Incorrect value has passed!");
-                redirectAttributes.addAttribute("errorCode","Nie udało się utworzyć kolejki. Nazwa jest nullem lub taka kolejka istnieje!");
+                redirectAttributes.addAttribute("errorCode","Nie udało się utworzyć kolejki. Nazwa jest nullem!");
             }
             return "redirect:/logged/queues";
         }
@@ -80,9 +87,14 @@ public class QueueManagementController
         {
             User user = userRepository.findByUsername(principal.getName());
             model.addAttribute("user", user);
-            if(queuename==null || queuename.equals("tasks") || queueRepository.count()==1)
+            if(queuename==null || queueRepository.count()==1)
             {
-                ra.addAttribute("message","Nie można usunąć tego elementu / jest to ostatnia kolejka");
+                ra.addAttribute("errorCode","Nie można usunąć tego elementu - jest to ostatnia kolejka");
+                return "redirect:/logged/queues";
+            }
+            else if( queuename.equals("tasks"))
+            {
+                ra.addAttribute("errorCode","Nie można usunąć domyślnej kolejki!");
                 return "redirect:/logged/queues";
             }
             else
@@ -92,6 +104,7 @@ public class QueueManagementController
                 {
                     Queue queue = tempQueue.get();
                     queueRepository.delete(queue);
+                    ra.addAttribute("message","Usunięto kolejkę!");
                     return "redirect:/logged/queues";
                 }
                 else

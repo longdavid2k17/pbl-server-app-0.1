@@ -60,16 +60,23 @@
   </div>
 </nav>
 <div class="container">
-  <div th:if="${message}" style="color: green">
-    <h2 th:text="${message}"/>
-  </div>
-  <div th:if="${errorCode}" style="color: red">
-    <h2 th:text="${errorCode}"/>
-  </div>
   <div th:if="${user.role=='ROLE_ADMIN'}">
+    <div class="row d-flex p-2 justify-content-center" style="text-align: center">
+      <div class="col-4">
+        <div th:if="${message}" style="color: green">
+          <h2 th:text="${message}"/>
+        </div>
+        <div th:if="${errorCode}" style="color: red">
+          <h2 th:text="${errorCode}"/>
+        </div>
+        <p><b>Pamiętaj aby upewnić się że prawidłowa kolejka jest używana na docelowym klastrze obliczeniowym!</b></p>
+      </div>
+    </div>
     <div class="row d-flex p-2 justify-content-center">
         <div class="col-4">
             <div class="form-container p-3">
+              <label><b>Ilość kolejek w bazie: <span th:text="${queues.size()}"></span></b></label>
+              <br/>
               <label><b>Istniejące kolejki:</b></label>
               <div th:each="queue : ${queues}" class="d-flex align-items-center m-2">
                 <span th:text="${queue.name}"></span>

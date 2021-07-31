@@ -10,4 +10,5 @@ public class Filter
     private String endDate;
     private String endHour;
     private String userId;
+    private String status;
 }
