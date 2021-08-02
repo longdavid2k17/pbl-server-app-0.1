@@ -1,0 +1,323 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Klient</name>
+    </assembly>
+    <members>
+        <member name="T:Klient.App">
+            <summary>
+            Interaction logic for App.xaml
+            </summary>
+            <summary>
+            App
+            </summary>
+        </member>
+        <member name="M:Klient.App.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Klient.App.Main">
+            <summary>
+            Application Entry Point.
+            </summary>
+        </member>
+        <member name="T:Klient.KlientOkno">
+            <summary>
+            Logika interakcji dla klasy KlientOkno.xaml
+            </summary>
+            <summary>
+            KlientOkno
+            </summary>
+        </member>
+        <member name="F:Klient.KlientOkno._klient">
+            <summary>
+            Pole przechowujące klienta
+            </summary>
+        </member>
+        <member name="F:Klient.KlientOkno.buttonStart">
+            <summary>
+            Pole przechowujące informacje o dostępności przycisku start
+            </summary>
+        </member>
+        <member name="F:Klient.KlientOkno.buttonStop">
+            <summary>
+            Pole przechowujące informacje o dostępności przycisku stop
+            </summary>
+        </member>
+        <member name="F:Klient.KlientOkno.backgroudWorkEnd">
+            <summary>
+            Pole przechowujące informacje o zakonczeniu pracy wątka w tle
+            </summary>
+        </member>
+        <member name="F:Klient.KlientOkno.flagStop">
+            <summary>
+            Pole przechowujące informacje o zakończeniu pracy
+            </summary>
+        </member>
+        <member name="F:Klient.KlientOkno.watekAktualizacjaStatusu">
+            <summary>
+            Pole przechowujące wątek działający w tle
+            </summary>
+        </member>
+        <member name="M:Klient.KlientOkno.KonfiguracjaPrzyciskow">
+            <summary>
+            Metoda umożliwiająca zmiane stanów przycisków asynchronicznie
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientOkno.KonfiguracjaFlag" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientOkno.ForceStop" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientOkno.aktualizujStatus(System.Int32)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientOkno.btn_start_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientOkno.btn_log_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientOkno.btn_stop_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <member name="M:Klient.KlientOkno.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Klient.KlientPodgląd">
+            <summary>
+            Logika interakcji dla klasy KlienPodgląd.xaml
+            </summary>
+            <summary>
+            KlientPodgląd
+            </summary>
+        </member>
+        <member name="F:Klient.KlientPodgląd._klient">
+            <summary>
+            Pole przechowujące klienta
+            </summary>
+        </member>
+        <member name="F:Klient.KlientPodgląd.buttonStart">
+            <summary>
+            Pole przechowujące informacje o dostępności przycisku start
+            </summary>
+        </member>
+        <member name="F:Klient.KlientPodgląd.buttonStop">
+            <summary>
+            Pole przechowujące informacje o dostępności przycisku stop
+            </summary>
+        </member>
+        <member name="F:Klient.KlientPodgląd.backgroudWorkEnd">
+            <summary>
+            Pole przechowujące informacje o zakonczeniu pracy wątka w tle
+            </summary>
+        </member>
+        <member name="F:Klient.KlientPodgląd.flagStop">
+            <summary>
+            Pole przechowujące informacje o zakończeniu pracy
+            </summary>
+        </member>
+        <member name="F:Klient.KlientPodgląd.watekAktualizacjaStatusu">
+            <summary>
+            Pole przechowujące wątek działający w tle
+            </summary>
+        </member>
+        <member name="M:Klient.KlientPodgląd.KonfiguracjaPrzyciskow">
+            <summary>
+            Metoda umożliwiająca zmiane stanów przycisków asynchronicznie
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientPodgląd.KonfiguracjaFlag" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientPodgląd.Aktualizuj" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientPodgląd.ForceStop" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientPodgląd.aktualizujStatus(System.Int32)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientPodgląd.btn_start_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientPodgląd.btn_log_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientPodgląd.btn_stop_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <member name="M:Klient.KlientPodgląd.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit._nazwa" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit._config" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit.stanZadania" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit.zadanie" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit.flagStop" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit.flagIsRuning" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit.semaphore" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit.semaphore2" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KlientRabbit.thread" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.getStan" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.getNazwa" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.getStart" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.getStop" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.getZadanie" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.KlientStart" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.KonfigurujPolaczenie(RabbitMQ.Client.ConnectionFactory@)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.CreateClient" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.KlientStop" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.Consumer_Received(System.Object,RabbitMQ.Client.Events.BasicDeliverEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.DodajWpis(System.String,Klient.StanZadania,System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.WriteInFile(System.String,System.String)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KlientRabbit.ForceStop" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._iloscKlientow" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._klienciNazwy" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_UserName" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_Password" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_VirualHost" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_HostName" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_Port" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_ilKolejek" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_QueueRecive" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._rabitMQ_QueueSend" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._programPath" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.Konfiguracja._flagPoprawne" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.Konfiguracja.ZapiszKonfiguracje" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.Konfiguracja.ZaladujDane" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.Konfiguracja.getStan(Klient.StanZadania)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.Konfiguracja.dodajNazw(System.String)" -->
+        <member name="T:Klient.KonfiguracjaForm">
+            <summary>
+            Logika interakcji dla klasy KonfiguracjaForm.xaml
+            </summary>
+            <summary>
+            KonfiguracjaForm
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "F:Klient.KonfiguracjaForm._conf" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KonfiguracjaForm.modyfikacjaKlientow" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KonfiguracjaForm.rabbit" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KonfiguracjaForm.klienci" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KonfiguracjaForm.textBoxes" -->
+        <!-- Badly formed XML comment ignored for member "F:Klient.KonfiguracjaForm.textBoxesQ" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KonfiguracjaForm.btn_rabbit_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KonfiguracjaForm.btn_klienci_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KonfiguracjaForm.btn_zapis_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KonfiguracjaForm.btn_zapisDoPliku_Click(System.Object,System.Windows.RoutedEventArgs)" -->
+        <!-- Badly formed XML comment ignored for member "M:Klient.KonfiguracjaForm.Aktualizuj" -->
+        <member name="M:Klient.KonfiguracjaForm.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Klient.MainWindow">
+            <summary>
+            Interaction logic for MainWindow.xaml
+            </summary>
+            <summary>
+            MainWindow
+            </summary>
+        </member>
+        <member name="F:Klient.MainWindow.klienci">
+            <summary>
+            Lista przechowująca aktywnych klientów
+            </summary>
+        </member>
+        <member name="F:Klient.MainWindow.conf">
+            <summary>
+            Pole przechowujące konfiguracje
+            </summary>
+        </member>
+        <member name="F:Klient.MainWindow.oknoGlowne">
+            <summary>
+            Pole przechowujące kontrolkę widoku głównego
+            </summary>
+        </member>
+        <member name="F:Klient.MainWindow.konfiguracjaForm">
+            <summary>
+            Pole przechowujące kontrolkę odpowiedzialną za zminę konfiguracji
+            </summary>
+        </member>
+        <member name="F:Klient.MainWindow.klientOkno">
+            <summary>
+            Pole przechowujące kontrolkę z pełnym podglądem klienta
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.ZaladujKonfiguracje">
+            <summary>
+            Metoda odpowiedzialna za załadowanie konfiguracji domyślnej lub z pliku
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.PrzejdzDoKonfiguracji">
+            <summary>
+            Zmiana wyswietlanego elementu na okno konfiguracji
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.PobierzKlienta(System.Int32)">
+            <summary>
+            Zwraca instancje klienta o zadanym id
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.DodajKlienta(Klient.KlientRabbit)">
+            <summary>
+            Dodaje klienta do listy aktywnych klientów, oraz tworzy przycisk do jego okna
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.btn_glowne_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Zmiana wyswietlanego elementu na widok główny
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.btn_konfiguracja_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Zmiana wyswietlanego elementu na okno konfiguracji
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.btn_klientClikc(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Zmiana wyswietlanego elementu na okno danego klienta
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.Window_Closing(System.Object,System.ComponentModel.CancelEventArgs)">
+            <summary>
+            Wyłączanie wszystkich wątków działających w tle
+            </summary>
+        </member>
+        <member name="M:Klient.MainWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Klient.OknoGlowne">
+            <summary>
+            Logika interakcji dla klasy OknoGlowne.xaml
+            </summary>
+            <summary>
+            OknoGlowne
+            </summary>
+        </member>
+        <member name="F:Klient.OknoGlowne._conf">
+            <summary>
+            Pole przechowujące konfiguracje
+            </summary>
+        </member>
+        <member name="F:Klient.OknoGlowne._mainWindow">
+            <summary>
+            Pole przechowujące link do okna głównego
+            </summary>
+        </member>
+        <member name="F:Klient.OknoGlowne.klientPodgląds">
+            <summary>
+            Lista przechowująca kontrolki podglądów dla klientów
+            </summary>
+        </member>
+        <member name="M:Klient.OknoGlowne.Aktualizuj(Klient.Konfiguracja)">
+            <summary>
+            Metoda aktualizująca dane dotyczące klientów
+            </summary>
+        </member>
+        <member name="M:Klient.OknoGlowne.ForeStop">
+            <summary>
+            Metoda wymuszająca przewania wątków w podglądach klientów
+            </summary>
+        </member>
+        <member name="M:Klient.OknoGlowne.btnDodaj_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Dodanie nowego aktywnego klienta
+            </summary>
+        </member>
+        <member name="M:Klient.OknoGlowne.btn_konfiguracja_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Przejście do okna klonfiguracji
+            </summary>
+        </member>
+        <member name="M:Klient.OknoGlowne.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+    </members>
+</doc>
