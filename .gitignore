@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### VS Studio ###
+Klient/.vs/
+Klient/Klient/bin/
+Klient/Klient/obj/
+.vs/

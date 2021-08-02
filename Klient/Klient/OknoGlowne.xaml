@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Klient.OknoGlowne"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Klient"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="650" Background="#FF2E2C2C">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button x:Name="btnDodaj" Content="+" HorizontalAlignment="Left" Height="100" Margin="10,10,0,0" VerticalAlignment="Top" Width="100" Background="#FF5DFF00" Foreground="White" FontSize="72" FontWeight="ExtraBold" FontFamily="Arial Black" Click="btnDodaj_Click"/>
+        <Label x:Name="lbl_aktywni" Content="Aktywni klienci: &#xD;&#xA;" HorizontalAlignment="Center" Height="50" Margin="0,10,0,0" VerticalAlignment="Top" Width="387" Foreground="White" FontSize="20"/>
+        <Button x:Name="btn_konfiguracja" Content="⚙" Height="100" Margin="0,10,10,0" VerticalAlignment="Top" Background="Yellow" Foreground="White" FontSize="72" FontWeight="ExtraBold" FontFamily="Arial Black" HorizontalAlignment="Right" Width="100" Click="btn_konfiguracja_Click"/>
+        <Label Content="Dodaj" Height="30" Margin="10,115,0,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Width="100"/>
+        <Label Content="Konfiguruj" Height="30" Margin="0,115,10,0" VerticalAlignment="Top" Foreground="White" HorizontalContentAlignment="Center" HorizontalAlignment="Right" Width="100"/>
+        <Label x:Name="lbl_ilosc" Content="Dostępna ilość:" HorizontalAlignment="Center" Height="50" Margin="0,60,0,0" VerticalAlignment="Top" Width="387" Foreground="White" FontSize="20"/>
+        <ScrollViewer VerticalScrollBarVisibility="Visible" Margin="0,181,0,10">
+            <Grid x:Name="dGridKlienci" Grid.Row="1" Margin="10,0,10,0"/>
+        </ScrollViewer>
+        <Label Content="Aktywni klienci:" HorizontalAlignment="Center" VerticalAlignment="Top" Width="630" Foreground="White" Margin="0,150,0,0"/>
+
+    </Grid>
+</UserControl>
