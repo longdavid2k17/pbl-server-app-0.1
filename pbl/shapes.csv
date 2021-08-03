@@ -1,4 +1,0 @@
-shapeId,name,command,parametersList
-39,tx3,Y:\_zrodlo\uruchamiacz1.exe,"[SwitchParameter(id=49, switchParam=/pgmsh), SwitchParameter(id=50, switchParam=/pgetdp), SwitchParameter(id=51, switchParam=/psource), SwitchParameter(id=52, switchParam=/pproj), SwitchParameter(id=53, switchParam=/pn), SwitchParameter(id=54, switchParam=/vn), SwitchParameter(id=55, switchParam=/pwyn), SwitchParameter(id=56, switchParam=/ct), SwitchParameter(id=57, switchParam=/lx), SwitchParameter(id=58, switchParam=/fi), SwitchParameter(id=59, switchParam=/fiz), SwitchParameter(id=60, switchParam=/fiy), SwitchParameter(id=61, switchParam=/fix), SwitchParameter(id=62, switchParam=/gs), SwitchParameter(id=63, switchParam=/b)]"
-41,test,dir,"[SwitchParameter(id=65, switchParam=/?)]"
-42,test2,TestProgram.exe,"[SwitchParameter(id=63, switchParam=/b), SwitchParameter(id=65, switchParam=/?)]"
